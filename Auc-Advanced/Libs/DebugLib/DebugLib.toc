@@ -1,0 +1,13 @@
+## Title: DebugLib |cff224477(lib)
+## Notes: A embeddable debugging library that transparently supports the nLog logging system, if present.
+##
+## Interface: 40000
+## LoadOnDemand: 0
+## OptionalDependencies: !nLog
+##
+## Version: 5.9.4960 (WhackyWallaby)
+## Revision: $Id: DebugLib.toc 280 2010-10-12 19:52:29Z Esamynn $
+## URL: http://auctioneeraddon.com/
+## Author: Norganna's AddOns
+##
+Load.xml

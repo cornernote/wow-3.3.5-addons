@@ -1,0 +1,19 @@
+------------------------------------------------------------------------
+r800 | azethoth | 2010-04-10 11:28:14 +0000 (Sat, 10 Apr 2010) | 1 line
+Changed paths:
+   A /tags/799 release (from /trunk:799)
+
+Tagging as 799 release
+------------------------------------------------------------------------
+r798 | AZETHOTH | 2010-03-23 19:20:37 +0000 (Tue, 23 Mar 2010) | 1 line
+Changed paths:
+   M /trunk/AutoBarClassBar.lua
+
+MouseIsOver(region) --> region:IsMouseOver()
+------------------------------------------------------------------------
+r797 | AZETHOTH | 2010-01-09 07:16:29 +0000 (Sat, 09 Jan 2010) | 1 line
+Changed paths:
+   M /trunk/AutoBarCategory.lua
+
+Vampiric Embrace added to buffs
+------------------------------------------------------------------------

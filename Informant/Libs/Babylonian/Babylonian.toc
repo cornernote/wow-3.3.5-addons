@@ -1,0 +1,12 @@
+## Title: Babylonian |cff224477(lib)
+## Notes: Provides the facilites to support languages other than those supported by the client locale.
+##
+## Interface: 40000
+## LoadOnDemand: 0
+##
+## Version: 5.9.4960 (WhackyWallaby)
+## Revision: $Id: Babylonian.toc 280 2010-10-12 19:52:29Z Esamynn $
+## URL: http://auctioneeraddon.com/
+## Author: Norganna's AddOns
+##
+Load.xml

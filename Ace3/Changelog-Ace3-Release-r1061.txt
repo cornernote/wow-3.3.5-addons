@@ -1,0 +1,77 @@
+------------------------------------------------------------------------
+r1062 | nevcairiel | 2012-08-27 17:46:15 +0000 (Mon, 27 Aug 2012) | 1 line
+Changed paths:
+   A /tags/Release-r1061 (from /trunk:1061)
+
+Tag as Release-r1061
+------------------------------------------------------------------------
+r1061 | nevcairiel | 2012-08-27 17:45:21 +0000 (Mon, 27 Aug 2012) | 1 line
+Changed paths:
+   M /trunk/changelog.txt
+
+Update changelog
+------------------------------------------------------------------------
+r1060 | nevcairiel | 2012-08-27 17:41:16 +0000 (Mon, 27 Aug 2012) | 1 line
+Changed paths:
+   M /trunk/Ace3.toc
+
+Update toc for 5.0
+------------------------------------------------------------------------
+r1059 | nevcairiel | 2012-08-26 16:18:47 +0000 (Sun, 26 Aug 2012) | 1 line
+Changed paths:
+   M /trunk/AceGUI-3.0/widgets/AceGUIContainer-ScrollFrame.lua
+
+AceGUI-3.0: ScrollFrame: Bump widget version from previous change
+------------------------------------------------------------------------
+r1058 | nevcairiel | 2012-08-26 16:02:29 +0000 (Sun, 26 Aug 2012) | 1 line
+Changed paths:
+   M /trunk/AceGUI-3.0/widgets/AceGUIContainer-ScrollFrame.lua
+
+AceGUI-3.0: Schedule a FixScroll instead of running it immediately to resolve a load-time layout issue
+------------------------------------------------------------------------
+r1057 | nevcairiel | 2012-08-11 09:04:22 +0000 (Sat, 11 Aug 2012) | 1 line
+Changed paths:
+   M /trunk/tests/AceLocale-3.0.lua
+   M /trunk/tests/AceTimer-3.0-ACE94.lua
+   M /trunk/tests/wow_api.lua
+
+Fix unit tests for all recent changes
+------------------------------------------------------------------------
+r1056 | nevcairiel | 2012-08-11 08:52:11 +0000 (Sat, 11 Aug 2012) | 1 line
+Changed paths:
+   M /trunk/AceGUI-3.0/widgets/AceGUIContainer-ScrollFrame.lua
+
+AceGUI-3.0: ScrollFrame: Fix scroll bar display in some cases (Ticket #303)
+------------------------------------------------------------------------
+r1055 | nevcairiel | 2012-08-11 08:34:17 +0000 (Sat, 11 Aug 2012) | 1 line
+Changed paths:
+   M /trunk/AceGUI-3.0/widgets/AceGUIWidget-Keybinding.lua
+
+AceGUI-3.0: Keybinding: Ensure the Keybinding popup is on the top level (Ticket #305)
+------------------------------------------------------------------------
+r1054 | nevcairiel | 2012-08-11 08:30:43 +0000 (Sat, 11 Aug 2012) | 1 line
+Changed paths:
+   M /trunk/AceGUI-3.0/widgets/AceGUIWidget-CheckBox.lua
+
+AceGUI-3.0: Checkbox: Description text on a disable checkbox should look disabled (Ticket #304)
+------------------------------------------------------------------------
+r1053 | nevcairiel | 2012-07-28 09:05:03 +0000 (Sat, 28 Jul 2012) | 1 line
+Changed paths:
+   M /trunk/AceGUI-3.0/widgets/AceGUIWidget-Label.lua
+
+AceGUI-3.0: Label: Top-Align the image when the text has more height then the image (Addendum to Ticket #301)
+------------------------------------------------------------------------
+r1052 | nevcairiel | 2012-07-28 08:31:21 +0000 (Sat, 28 Jul 2012) | 1 line
+Changed paths:
+   M /trunk/AceGUI-3.0/widgets/AceGUIWidget-Label.lua
+
+AceGUI-3.0: Label: Fix alignment of the text to the icon (Ticket #301)
+------------------------------------------------------------------------
+r1051 | nevcairiel | 2012-06-30 20:12:03 +0000 (Sat, 30 Jun 2012) | 1 line
+Changed paths:
+   M /trunk/AceGUI-3.0/widgets/AceGUIWidget-Button.lua
+   M /trunk/AceGUI-3.0/widgets/AceGUIWidget-Keybinding.lua
+   M /trunk/AceGUI-3.0/widgets/AceGUIWidget-MultiLineEditBox.lua
+
+AceGUI-3.0: UIPanelButtonTemplate2 -> UIPanelButtonTemplate for WoW 5.0
+------------------------------------------------------------------------

@@ -1,0 +1,14 @@
+﻿## Interface: 30300
+## Title: |cff00ff00Moncaí's|r Equipment Compare
+## Notes: Replacement for Equip Compare, by Moncaí
+## Author: Moncaí
+## Version: 1.3.3
+## X-Website: http://wow.curse.com/downloads/wow-addons/details/moncaicompare.aspx
+## URL: http://wow.curse.com/downloads/wow-addons/details/moncaicompare.aspx
+## RequiredDeps:
+## OptionalDeps: 
+## X-Curse-Packaged-Version: v1.3.3
+## X-Curse-Project-Name: Moncai Compare
+## X-Curse-Project-ID: moncaicompare
+## X-Curse-Repository-ID: wow/moncaicompare/mainline
+!MoncaiCompare.lua

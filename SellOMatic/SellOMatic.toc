@@ -1,0 +1,49 @@
+## Interface: 30300
+## Title: Sell|cff7fff7f-|rO|cff7fff7f-|rMatic |cFF00FF001.2.8a|r
+## Notes: Helps you automate selling stuff.
+## Author: Silmano
+## Version: v1.2.8a
+## OptionalDeps: Ace3
+## SavedVariables: SellOMaticDB
+## OptionalDeps: Ace3
+## X-Credits: shwy72(koKR), murmurwoods(zhCN/zhTW), oXid_FoX(frFR), vincentgdg(deDE), StingerSoft(ruRU)
+## X-Category: Tradeskill
+## X-Embeds: Ace3
+## X-RelSite-WoWI: 6770
+## X-RelSite-Curse: 7178
+## X-RelSite-UI.WoW: 3902
+## X-Curse-Packaged-Version: v1.2.8a
+## X-Curse-Project-Name: Sell-O-Matic
+## X-Curse-Project-ID: sell-o-matic
+## X-Curse-Repository-ID: wow/sell-o-matic/mainline
+
+#@no-lib-strip@
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+Libs\AceConsole-3.0\AceConsole-3.0.xml
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\LibAbacus-3.0\LibAbacus-3.0.lua
+Libs\LibGratuity-3.0\LibGratuity-3.0.lua
+#@end-no-lib-strip@
+
+Locales\SOM-deDE.lua
+Locales\SOM-enUS.lua
+Locales\SOM-esES.lua
+Locales\SOM-esMX.lua
+Locales\SOM-frFR.lua
+Locales\SOM-koKR.lua
+Locales\SOM-ruRU.lua
+Locales\SOM-zhCN.lua
+Locales\SOM-zhTW.lua
+
+SOM.lua
+SOM.xml
+GUI_AddItem.lua
+GUI_DelItem.lua
+GUI_Destroy.lua

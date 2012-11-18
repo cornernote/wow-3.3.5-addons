@@ -1,0 +1,114 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+
+	<Frame name="SellOMatic" parent="UIParent" hidden="true">
+		<Size>
+			<AbsDimension x="1" y="1" />
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER" relativeTo="UIParent">
+				<Offset>
+					<AbsDimension x="-270" y="245" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" tile="false"/>
+		<Frames>
+			<Button name="SellButton" parent="MerchantFrame" frameStrata="HIGH">
+				<Size>
+					<AbsDimension x="32" y="32" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="-42" y="-40"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick> SellOMatic:Sell() </OnClick>
+				</Scripts>
+				<NormalTexture file="Interface\Icons\INV_Misc_Coin_02">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+						<Anchor point="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</NormalTexture>
+				<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+						<Anchor point="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</HighlightTexture>
+				<PushedTexture file="Interface\Icons\INV_Misc_Coin_02">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="1" y="-1"/>
+							</Offset>
+						</Anchor>
+						<Anchor point="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="-1" y="1"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</PushedTexture>
+			</Button>
+			<Button name="AddButton" parent="MerchantFrame" frameStrata="HIGH" inherits="OptionsButtonTemplate" text="+">
+				<Size>
+					<AbsDimension x="16" y="16" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="-76" y="-40" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick> SellOMatic:ShowAddFrame() </OnClick>
+				</Scripts>
+			</Button>
+			<Button name="DelButton" parent="MerchantFrame" frameStrata="HIGH" inherits="OptionsButtonTemplate" text="-">
+				<Size>
+					<AbsDimension x="16" y="16" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="-76" y="-57" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick> SellOMatic:ShowDelFrame() </OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+	</Frame>
+
+	<GameTooltip name="SellOMatic_Tooltip" inherits="GameTooltipTemplate" hidden="true">
+		<Scripts>
+			<OnLoad>
+				this:SetScript("OnTooltipAddMoney", SellOMatic_SetProfit);
+			</OnLoad>
+		</Scripts>
+	</GameTooltip>
+
+</Ui>

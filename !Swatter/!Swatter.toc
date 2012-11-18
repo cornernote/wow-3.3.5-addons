@@ -1,0 +1,13 @@
+## Title: Swatter
+## Notes: Debugging tool for handling and displaying of error messages in a useful way.
+##
+## Interface: 40000
+## SavedVariables: SwatterData
+##
+## Version: 5.9.4960 (WhackyWallaby)
+## Revision: $Id: !Swatter.toc 280 2010-10-12 19:52:29Z Esamynn $
+## URL: http://auctioneeraddon.com/dl/Swatter/
+## Author: Norganna's AddOns
+##
+Support\Load.xml
+Swatter.lua

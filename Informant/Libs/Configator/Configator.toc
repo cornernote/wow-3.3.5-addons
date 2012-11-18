@@ -1,0 +1,13 @@
+## Title: Configator |cff224477(lib)
+## Notes: Configator allows authors to easily construct a graphical user configuration interface.
+##
+## Interface: 40000
+## LoadOnDemand: 0
+##
+## Version: 5.9.4960 (WhackyWallaby)
+## Revision: $Id: Configator.toc 280 2010-10-12 19:52:29Z Esamynn $
+## Author: Norganna's AddOns
+## URL: http://AuctioneerAddOn.Com/
+## X-Feedback:  http://Forums.Norganna.Org
+##
+Load.xml

@@ -1,0 +1,58 @@
+﻿## Interface: 30300
+## Title: AutoBar |cff7fff7f -Ace2-|r
+## Title-zhCN: 消耗品助手 |cff7fff7f -Ace2-|r
+## Title-zhTW: AutoBar |cff7fff7f -Ace2-|r
+## Author: Toadkiller
+## Version: v3.2.0.798
+## Notes: Dynamic bars with buttons that automatically add potions, water, food and other items you specify into a button for use. Does not use action slots.
+## Notes-ruRU: Динамические панели с кнопками, которые автоматически добавляют зелья, воду, пищу и другие предметы для котрых вы определяете кнопки для использования. Не использует слоты на панеле команд.
+## Notes-koKR: 자동으로 물약, 음료, 음식등이 포함된 버튼을 제공하며 슬롯에 사용할 아이템을 별도로 추가할 수 있습니다. 이것은 액션 슬롯에 여유를 가져다 줄것입니다.
+## Notes-zhCN: 一组可配置的按钮，能自动从背包中寻找设定的物品供方便使用。
+## Notes-zhTW: 一組可配置的按鈕，能自動從背包中尋找設定的物品供方便使用。
+## Notes-esES: Provee hasta 24 botones en una barra que anyade automaticamente cualquier pocion, agua, comida u otro objeto que especifiques en una casilla. No usa ninguna casilla de tus barras, as럱ue puedes guardar ese espacio para tus hechizos y habilidades.
+## Notes-esMX: Provee hasta 24 botones en una barra que anyade automaticamente cualquier pocion, agua, comida u otro objeto que especifiques en una casilla. No usa ninguna casilla de tus barras, as럱ue puedes guardar ese espacio para tus hechizos y habilidades.
+## DefaultState: enabled
+## UIType: 动作条
+## UIType-zhTW: 動作條
+## X-Category: Action Bars
+## X-Website: http://code.google.com/p/autobar/
+## X-AceForum: 9138
+## X-RelSite-WoWI: 5502
+## X-RelSite-Curse: 9853
+## X-Credits: Diablo for teaching us how to guzzle potions. Saien for first enabling guzzling in WoW.  Sayclub (Korean) | PDI175, lostcup (Chinese traditional and simplified) | Teodred, curexx (German), Cinedelle (French), shiftos (Spanish), StingerSoft (Russian)
+## OptionalDeps: Ace3, Ace2, DewdropLib, LibBabble-Zone-3.0, LibKeyBound-1.0, LibKeyBoundExtra-1.0, LibPeriodicTable-3.1, LibStickyFrames-2.0, LibDBIcon-1.0, OmniCC, ButtonFacade
+## X-Embeds: Ace2, DewdropLib, LibBabble-3.0, LibBabble-Zone-3.0, LibKeyBound-1.0, LibKeyBoundExtra-1.0, LibPeriodicTable-3.1, LibStickyFrames-2.0
+## X-Wiki-BugTracker: [http://code.google.com/p/autobar/issues/list Google Code]
+## SavedVariables: AutoBarDB
+## X-Curse-Packaged-Version: 799 release
+## X-Curse-Project-Name: AutoBar
+## X-Curse-Project-ID: auto-bar
+## X-Curse-Repository-ID: wow/auto-bar/mainline
+
+# Libraries
+embeds.xml
+
+AceGUIWidget-DragLink.lua
+Core.lua
+
+# Localization
+Locale-enUS.lua
+Locale-deDE.lua
+Locale-esES.lua
+Locale-esMX.lua
+Locale-frFR.lua
+Locale-koKR.lua
+Locale-ruRU.lua
+Locale-zhCN.lua
+Locale-zhTW.lua
+
+AutoBarDB.lua
+AutoBarOptions.lua
+AutoBarSearch.lua
+AutoBarClassBar.lua
+AutoBarClassBasicButton.lua
+AutoBarClassButton.lua
+AutoBarClassPopupButton.lua
+AutoBarButton.lua
+AutoBarCategory.lua
+

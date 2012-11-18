@@ -1,0 +1,11 @@
+## Title: Auc:Util:AutoMagic
+## Interface: 40000
+## Dependancies: Auc-Advanced
+## OptionalDependencies: Auc-Util-Appraiser, Enchantrix, Auc-Util-ItemSuggest, LibDataBroker
+##
+## Version: 5.9.4960 (WhackyWallaby)
+## URL: http://auctioneeraddon.com/
+## Author: Norganna's AddOns
+## X-Part-Of: Auctioneer
+## X-Max-Interface: 40000
+Embed.xml

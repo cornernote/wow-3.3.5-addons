@@ -1,0 +1,3 @@
+v1.2.8a:
+- Added BoE/BoP check to sell items by iLevel without list.
+- Fix case sensitive lists, will now work properly.
