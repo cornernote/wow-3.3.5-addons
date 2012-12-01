@@ -1,0 +1,8 @@
+2010-10-19  sylvanaar  <sylvanaar@7213456c-7c21-484b-8324-69955f39d2f8>
+
+[558e8517963d] [3.3.9]
+* ACP.lua:
+
+set the number of addon sets to 25
+
+

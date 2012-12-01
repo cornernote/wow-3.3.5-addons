@@ -1,0 +1,251 @@
+------------------------------------------------------------------------
+r218 | adjo | 2010-10-12 21:16:20 +0000 (Tue, 12 Oct 2010) | 4 lines
+Changed paths:
+   M /trunk/Genie.lua
+
+REMOVE; Genie.Container; _G removed
+BUGFIX; Genie.Container; G bag injection
+REMOVE; GuildBag:IsEnabled()
+
+------------------------------------------------------------------------
+r217 | adjo | 2010-10-12 17:37:14 +0000 (Tue, 12 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/Modules/Genie_UI/GenieUI.lua
+
+BUGFIX; GENIE_UI; Module:CreateRankEditor() : family name will now be correcly reset
+------------------------------------------------------------------------
+r216 | adjo | 2010-10-12 17:18:57 +0000 (Tue, 12 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/Modules/Genie_UI/GenieUI.lua
+
+BUGFIX; Module.OnGenieEditButtonClick
+------------------------------------------------------------------------
+r215 | adjo | 2010-10-12 16:48:58 +0000 (Tue, 12 Oct 2010) | 25 lines
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/Genie.lua
+   M /trunk/Genie.toc
+   D /trunk/LDB+I.lua
+   D /trunk/Libs/LibDataBroker
+   A /trunk/Modules/Genie_LDB
+   A /trunk/Modules/Genie_LDB/Genie_LDB.toc
+   A /trunk/Modules/Genie_LDB/LDB+I.lua
+   A /trunk/Modules/Genie_LDB/Libs
+   A /trunk/Modules/Genie_LDB/Libs/LibDataBroker-1.1
+   A /trunk/Modules/Genie_LDB/Libs/LibDataBroker-1.1/LibDataBroker-1.1.lua
+   A /trunk/Modules/Genie_LDB/embeds.xml
+   M /trunk/Modules/Genie_UI/AceGUIContainer-GenieFrame.lua
+   M /trunk/Modules/Genie_UI/AceGUIContainer-GenieTreeGroup.lua
+   M /trunk/Modules/Genie_UI/AceGUIWidget-GenieIcon.lua
+   M /trunk/Modules/Genie_UI/GenieUI.lua
+   M /trunk/Modules/Genie_UI/Genie_UI.toc
+   A /trunk/Modules/Genie_UI/embeds.xml
+   M /trunk/embeds.xml
+
+WARNING; DO NOT USE;
+UPDATE; GenieIcon:SetMinQualityForGlow(quality) ; uses GetItemQualityColor()
+BUGFIX; GenieTreeGroup:SetSelect/Select(); functionaliy inverted
+UPDATE; GenieTreeGroup:Select(); Fire:OnPairSelected()
+ADD; GenieFrame; overviewbutton, ignorebutton
+ADD; GenieFrame:SetButtonText(button, text);
+ADD; GenieFrame:GetButtonText(button);
+REMOVE; GenieFrame; resetbutton
+UPDATE; Genie; Genie.UTILS.ConcatTable(table1, table2, appendKey)
+ADD; Genie.UTILS.GroupGetParent(group)
+ADD; Genie.UTILS.GroupGetBags(group, parent, all)
+ADD; Genie.UTILS.GroupGetAllBags(group)
+ADD; Genie.UTILS.GroupGetName(group)
+ADD; Genie.UTILS.GroupGetVisibleUser(); returns all groups that the user can safely know about
+UPDATE; Genie.Container; bags are now injected to be save with bag/bank-slot additions
+BUGFIX; Genie:DoUpdateContainer(); soundbug fixed
+UPDATE; Genie:DoBag(); new container api
+UPDATE; Genie:DoBank(); new container api
+UPDATE; Genie:DoGuildbank(); new container api
+BUGFIX; Genie:FamilyUpdate(); Genie.FLAG_RSS = true moved
+UPDATE; Genie:FamilyIgnore(); new container api
+REMOVE; Genie:FamilyEnable()
+UPDATE; finalized functions moved out of new features section
+UPDATE; .toc; OptionalDependencies 
+UPDATE; .pkgmeta; OptionalDependencies
+------------------------------------------------------------------------
+r214 | adjo | 2010-10-07 11:57:23 +0000 (Thu, 07 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/.docmeta
+
+UPDATE; again .docmeta (last try)
+------------------------------------------------------------------------
+r213 | adjo | 2010-10-07 11:36:46 +0000 (Thu, 07 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/.docmeta
+
+UPDATE; again .docmeta
+------------------------------------------------------------------------
+r212 | adjo | 2010-10-07 11:14:02 +0000 (Thu, 07 Oct 2010) | 2 lines
+Changed paths:
+   M /trunk/Modules/Genie_UI/GenieUI.lua
+
+BUGFIX; GUI; API:EditButtonSetContainer
+
+------------------------------------------------------------------------
+r211 | adjo | 2010-10-07 11:04:50 +0000 (Thu, 07 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/Modules/Genie_UI/AceGUIContainer-GenieFrame.lua
+   M /trunk/Modules/Genie_UI/AceGUIContainer-GenieTreeGroup.lua
+   M /trunk/Modules/Genie_UI/AceGUIWidget-GenieIcon.lua
+
+UPDATE; correctly formatted comments
+------------------------------------------------------------------------
+r210 | adjo | 2010-10-07 10:30:49 +0000 (Thu, 07 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/.docmeta
+
+UPDATE; again .docmeta
+------------------------------------------------------------------------
+r209 | adjo | 2010-10-07 09:21:25 +0000 (Thu, 07 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/Genie.lua
+
+BUGFIX; Added Genie.FLAG_RSS = true to most of the family functions
+------------------------------------------------------------------------
+r208 | adjo | 2010-10-07 09:04:21 +0000 (Thu, 07 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/.docmeta
+
+UPDATE; .docmeta
+------------------------------------------------------------------------
+r207 | adjo | 2010-10-07 08:49:03 +0000 (Thu, 07 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/.docmeta
+
+UPDATE; still testing .docmeta
+------------------------------------------------------------------------
+r206 | adjo | 2010-10-07 08:43:33 +0000 (Thu, 07 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/Modules/Genie_UI/GenieUI.lua
+
+UPDATE; documentaion API:EditButtonSetContainer
+------------------------------------------------------------------------
+r205 | adjo | 2010-10-07 08:28:24 +0000 (Thu, 07 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/.docmeta
+
+UPDATE; still testing
+------------------------------------------------------------------------
+r204 | adjo | 2010-10-07 08:15:53 +0000 (Thu, 07 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/Modules/Genie_UI/GenieUI.lua
+
+BUGFIX; GUI; API.SetGenieEdit -> API.SetEditmode
+------------------------------------------------------------------------
+r203 | adjo | 2010-10-07 08:07:38 +0000 (Thu, 07 Oct 2010) | 1 line
+Changed paths:
+   A /trunk/.docmeta
+
+ADD; .docmeta (test; may be removed in future)
+------------------------------------------------------------------------
+r202 | adjo | 2010-10-07 08:06:18 +0000 (Thu, 07 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/Modules/Genie_UI/GenieUI.lua
+
+BUGFIX; GUI; families[class.criteria].ignore == nil
+------------------------------------------------------------------------
+r201 | adjo | 2010-10-06 23:23:53 +0000 (Wed, 06 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/Modules/Genie_UI
+   M /trunk/Modules/Genie_UI/GenieUI.lua
+
+UPDATE; GUI; Families ignorable on a <bagtype> basis
+------------------------------------------------------------------------
+r200 | adjo | 2010-10-06 23:17:48 +0000 (Wed, 06 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/Genie.lua
+
+BUGFIX; Genie:FamilyIgnore
+------------------------------------------------------------------------
+r199 | adjo | 2010-10-06 21:28:40 +0000 (Wed, 06 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+UPDATE; Module Genie_UI -> Addons
+------------------------------------------------------------------------
+r198 | adjo | 2010-10-06 21:24:33 +0000 (Wed, 06 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/Genie.lua
+   A /trunk/LDB+I.lua
+
+UPDATE; LDB and LDBIcon moved out of Genie.lua
+------------------------------------------------------------------------
+r197 | adjo | 2010-10-06 21:23:24 +0000 (Wed, 06 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/Locale/deDE.lua
+   M /trunk/Locale/enUS.lua
+   M /trunk/Locale/esES.lua
+   M /trunk/Locale/esMX.lua
+   M /trunk/Locale/frFR.lua
+   M /trunk/Locale/koKR.lua
+   M /trunk/Locale/ruRU.lua
+   M /trunk/Locale/zhCN.lua
+   M /trunk/Locale/zhTW.lua
+
+UPDATE;
+------------------------------------------------------------------------
+r196 | adjo | 2010-10-06 21:22:31 +0000 (Wed, 06 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/Genie.toc
+
+UPDATE; LibDataBroker now directy embedded
+------------------------------------------------------------------------
+r195 | adjo | 2010-10-06 21:20:42 +0000 (Wed, 06 Oct 2010) | 1 line
+Changed paths:
+   D /trunk/Modules/Genie_UI/GenieUI.lua.bak
+
+REMOVED;
+------------------------------------------------------------------------
+r194 | adjo | 2010-10-06 21:19:31 +0000 (Wed, 06 Oct 2010) | 2 lines
+Changed paths:
+   A /trunk/Media
+   A /trunk/Media/icon_default.tga
+   A /trunk/Media/icon_editmode.tga
+   A /trunk/Modules
+   A /trunk/Modules/Genie_UI
+   A /trunk/Modules/Genie_UI/AceGUIContainer-GenieFrame.lua
+   A /trunk/Modules/Genie_UI/AceGUIContainer-GenieTreeGroup.lua
+   A /trunk/Modules/Genie_UI/AceGUIWidget-GenieIcon.lua
+   A /trunk/Modules/Genie_UI/GenieUI.lua
+   A /trunk/Modules/Genie_UI/GenieUI.lua.bak
+   A /trunk/Modules/Genie_UI/Genie_UI.toc
+
+ADD; UI Module
+
+------------------------------------------------------------------------
+r193 | adjo | 2010-10-06 21:16:39 +0000 (Wed, 06 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/embeds.xml
+
+UPDATE; LibDataBroker now directy embedded
+------------------------------------------------------------------------
+r192 | adjo | 2010-09-15 13:46:46 +0000 (Wed, 15 Sep 2010) | 2 lines
+Changed paths:
+   M /trunk/Genie.toc
+
+ADD; ## X-Compatible-With: 40000
+
+------------------------------------------------------------------------
+r191 | adjo | 2010-08-06 15:13:34 +0000 (Fri, 06 Aug 2010) | 3 lines
+Changed paths:
+   M /trunk/Genie.lua
+   M /trunk/Locale
+   M /trunk/Locale/deDE.lua
+   M /trunk/Locale/enUS.lua
+   M /trunk/Locale/esES.lua
+   M /trunk/Locale/esMX.lua
+   M /trunk/Locale/frFR.lua
+   M /trunk/Locale/koKR.lua
+   M /trunk/Locale/ruRU.lua
+   M /trunk/Locale/zhCN.lua
+   M /trunk/Locale/zhTW.lua
+
+UPDATE; aic localization
+UPDATE; Item.Id -> ItemID
+ADDED; L.UseProfile, L.Sync, L.ItemID
+------------------------------------------------------------------------

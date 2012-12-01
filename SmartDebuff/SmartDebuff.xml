@@ -1,0 +1,3295 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+  <Script file="SmartDebuff.globals.lua"/>
+  <Script file="localization.en.lua"/>
+  <Script file="localization.de.lua"/>
+  <Script file="localization.fr.lua"/>
+  <Script file="localization.es.lua"/>
+  <Script file="localization.tw.lua"/>  
+  <Script file="SmartDebuff.lua"/>
+  
+  <Frame name="SmartDebuffFrame">
+    <Scripts>
+      <OnLoad>
+        SMARTDEBUFF_OnLoad(self);
+      </OnLoad>
+      <OnEvent>
+        SMARTDEBUFF_OnEvent(self, event, arg1, arg2, arg3, arg4, arg5);
+      </OnEvent>
+      <OnUpdate>
+        SMARTDEBUFF_OnUpdate(self, elapsed);
+      </OnUpdate>      
+    </Scripts>
+  </Frame>
+  
+  <!-- Hidden tooltip -->
+  <GameTooltip name="SmartDebuffTooltip" hidden="true" inherits="GameTooltipTemplate">
+    <Scripts>
+      <OnLoad>
+        self:SetOwner(SmartDebuffFrame, "ANCHOR_NONE");
+      </OnLoad>
+    </Scripts>
+  </GameTooltip>  
+  
+  <!-- New smaller font -->
+  <Font name="SmartDebuff_GameFontNormalMini" inherits="SystemFont_Tiny" virtual="true">
+    <FontHeight>
+      <AbsValue val="9"/>
+    </FontHeight>
+    <Color r="1.0" g="0.82" b="0"/>
+  </Font>
+  <Font name="SmartDebuff_GameFontHighlightMini" inherits="SmartDebuff_GameFontNormalMini" virtual="true">
+    <Color r="1.0" g="1.0" b="1.0"/>
+  </Font>
+  <Font name="SmartDebuff_GameFontNormalMicro" font="SystemFont_Tiny" virtual="true">
+		<FontHeight>
+			<AbsValue val="8"/>
+		</FontHeight>
+    <Color r="1.0" g="0.82" b="0"/>
+  </Font>
+  <Font name="SmartDebuff_GameFontHighlightMicro" inherits="SmartDebuff_GameFontNormalMicro" virtual="true">
+    <Color r="1.0" g="1.0" b="1.0"/>
+  </Font>
+  <Font name="SmartDebuff_Font" inherits="SystemFont_Tiny" virtual="true">
+    <Color r="1.0" g="1.0" b="1.0"/>
+  </Font>
+  <Font name="SmartDebuff_FontHP" inherits="SystemFont_Tiny" virtual="true">
+    <!-- 
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1"/>
+			</Offset>
+			<Color r="0" g="0" b="0"/>
+		</Shadow>
+		-->
+    <Color r="1.0" g="1.0" b="1.0"/>
+  </Font>  
+    
+  <!-- Hidden tooltip -->
+  <GameTooltip name="SmartDebuffTooltip" hidden="true" inherits="GameTooltipTemplate">
+    <Scripts>
+      <OnLoad>
+        self:SetOwner(SmartDebuffFrame, "ANCHOR_NONE");
+      </OnLoad>
+    </Scripts>
+  </GameTooltip>    
+  
+  
+  <Frame name="SmartDebuffSF" movable="true" toplevel="true" frameStrata="MEDIUM" parent="UIParent" hidden="true" enableMouse="true">
+    <Size>
+      <AbsDimension x="120" y="122"/>
+    </Size>
+    <Anchors>
+      <Anchor point="TOPLEFT" relativePoint="CENTER" relativeTo="UIParent">
+        <Offset>
+          <AbsDimension x="0" y="0"/>
+        </Offset>
+      </Anchor>
+    </Anchors>
+    
+    <!-- Interface\DialogFrame\UI-DialogBox-Background -->
+    <!--
+    <Backdrop name="$parent_Backdrop" bgFile="" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+      <BackgroundInsets>
+        <AbsInset left="1" right="1" top="1" bottom="1"/>
+      </BackgroundInsets>
+      <TileSize>
+        <AbsValue val="4"/>
+      </TileSize>
+      <EdgeSize>
+        <AbsValue val="4"/>
+      </EdgeSize>
+    </Backdrop>    
+    -->
+    
+    <Frames>
+      <Button name="$parent_btnClose" inherits="UIPanelCloseButton">      
+        <Size>
+          <AbsDimension x="20" y="20"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeTo="$parent">
+            <Offset>
+              <AbsDimension x="2" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetAlpha(0.8);
+          </OnLoad>          
+          <OnClick>
+            SMARTDEBUFF_ToggleSF();
+          </OnClick>
+        </Scripts>        
+      </Button>
+      
+      
+      <Button name="$parent_btnStyle" inherits="OptionsButtonTemplate" text="S">
+        <Size>
+            <AbsDimension x="12" y="12" />
+        </Size>    
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parent">
+            <Offset>
+              <AbsDimension x="4" y="-3"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+            self:SetAlpha(0.8);
+            self:SetNormalFontObject(SmartDebuff_GameFontNormalMicro);
+            self:SetHighlightFontObject(SmartDebuff_GameFontHighlightMicro);            
+          </OnLoad>         
+          <OnClick>
+            if (arg1 == "LeftButton" and IsAltKeyDown()) then
+              SMARTDEBUFF_ToggleShowLR();
+            elseif (arg1 == "LeftButton" and IsShiftKeyDown()) then
+              SMARTDEBUFF_ToggleClassColors();
+            elseif (arg1 == "LeftButton") then
+              SMARTDEBUFF_ToggleSortedByClass();
+            elseif (arg1 == "RightButton") then
+              SMARTDEBUFF_ToggleSFBackdrop();
+            end            
+          </OnClick>
+          <OnEnter>
+            if (not InCombatLockdown()) then
+              SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_TITLE, SMARTDEBUFF_TT);
+            end
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>          
+        </Scripts>
+      </Button>
+      
+      <Button name="$parent_btnOptions" inherits="OptionsButtonTemplate" text="O">
+        <Size>
+            <AbsDimension x="12" y="12" />
+        </Size>    
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativePoint="TOPLEFT" relativeTo="$parent_btnClose">
+            <Offset>
+              <AbsDimension x="2" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetAlpha(0.8);
+            self:SetNormalFontObject(SmartDebuff_GameFontNormalMicro);
+            self:SetHighlightFontObject(SmartDebuff_GameFontHighlightMicro);
+          </OnLoad>        
+          <OnClick>
+            SMARTDEBUFF_ToggleOF();
+          </OnClick>
+        </Scripts>
+      </Button>      
+      
+      <!-- GameFontHighlightSmall, GameFontNormalSmall -->
+      <EditBox name="$parent_Title" letters="200" multiLine="true" autoFocus="false">
+        <Size>
+          <AbsDimension x="126" y="20"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_btnStyle">
+            <Offset>
+              <AbsDimension x="-1" y="-1"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <FontString inherits="GameFontNormalSmall" justifyH="LEFT"/>
+        <Scripts>       
+          <OnLoad>
+            self:SetFontObject(SmartDebuff_GameFontNormalMicro);
+            self:SetText("martDebuff");
+            self:EnableMouse(false);
+            self:EnableKeyboard(false);           
+          </OnLoad>          
+        </Scripts>          
+      </EditBox>    
+
+    </Frames>
+
+    <Scripts>  
+      <OnLoad>
+        --self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+         self:RegisterForDrag("LeftButton");
+         self:EnableMouse(true);
+         self:SetMovable(true);
+      </OnLoad>
+      <OnShow>
+      </OnShow>
+      <OnHide>
+        self:StopMovingOrSizing();
+      </OnHide>
+      <OnDragStart>
+        if (arg1 == "LeftButton" and IsShiftKeyDown()) then
+          self:StartMoving();
+        end      
+      </OnDragStart>
+      <OnDragStop>
+        self:StopMovingOrSizing();
+        _,_,_, SMARTDEBUFF_Options.SFPosX, SMARTDEBUFF_Options.SFPosY = SmartDebuffSF:GetPoint();
+        if (SMARTDEBUFF_Options.VerticalUp) then
+          SMARTDEBUFF_Options.SFPosY = SMARTDEBUFF_Options.SFPosY - SmartDebuffSF:GetHeight();
+        end
+        SMARTDEBUFF_AddMsgD(SMARTDEBUFF_Options.SFPosX .. ", " .. SMARTDEBUFF_Options.SFPosY);
+      </OnDragStop>      
+      <OnMouseDown>
+      </OnMouseDown>
+      <OnMouseUp>
+        if (arg1 == "RightButton" and IsShiftKeyDown()) then
+          SMARTDEBUFF_ToggleOF();
+        end          
+      </OnMouseUp>      
+    </Scripts>  
+  
+  </Frame>
+  
+  
+  <Frame name="SmartDebuffIF" movable="true" toplevel="true" frameStrata="MEDIUM" parent="UIParent" hidden="true" enableMouse="true">
+    <Size>
+      <AbsDimension x="92" y="70"/>
+    </Size>
+    <Anchors>
+      <Anchor point="TOPLEFT" relativePoint="CENTER" relativeTo="UIParent">
+        <Offset>
+          <AbsDimension x="0" y="0"/>
+        </Offset>
+      </Anchor>
+    </Anchors>
+    
+    <!-- Interface\DialogFrame\UI-DialogBox-Background -->
+    <Backdrop name="$parent_Backdrop" bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+      <BackgroundInsets>
+        <AbsInset left="2" right="2" top="2" bottom="2"/>
+      </BackgroundInsets>
+      <TileSize>
+        <AbsValue val="8"/>
+      </TileSize>
+      <EdgeSize>
+        <AbsValue val="8"/>
+      </EdgeSize>
+    </Backdrop>    
+    
+    <Frames>
+      
+      <!-- GameFontHighlightSmall, GameFontNormalSmall -->
+      <EditBox name="$parent_lblInfo" letters="500" multiLine="true" autoFocus="false">
+        <Size>
+          <AbsDimension x="80" y="66"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent">
+            <Offset>
+              <AbsDimension x="4" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <FontString inherits="GameFontNormalSmall" justifyH="LEFT"/>
+        <Scripts>       
+          <OnLoad>
+            self:SetAutoFocus(false);
+            self:SetText("");
+            self:EnableMouse(false);
+            self:EnableKeyboard(false);
+          </OnLoad>          
+        </Scripts>          
+      </EditBox>
+      
+      <EditBox name="$parent_lblOut" letters="500" multiLine="true" autoFocus="false">
+        <Size>
+          <AbsDimension x="80" y="66"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$parent">
+            <Offset>
+              <AbsDimension x="-6" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <FontString inherits="GameFontHighlightSmall" justifyH="RIGHT"/>
+        <Scripts>       
+          <OnLoad>
+            self:SetAutoFocus(false);
+            self:SetText("");
+            self:EnableMouse(false);
+            self:EnableKeyboard(false);
+          </OnLoad>          
+        </Scripts>          
+      </EditBox>      
+
+    </Frames>
+
+    <Scripts>  
+      <OnLoad>
+         self:RegisterForDrag("LeftButton");
+         self:EnableMouse(true);
+         self:SetMovable(true);
+      </OnLoad>
+      <OnShow>
+      </OnShow>
+      <OnHide>
+        self:StopMovingOrSizing();
+      </OnHide>
+      <OnDragStart>
+        if (arg1 == "LeftButton" and IsShiftKeyDown()) then
+          self:StartMoving();
+        end      
+      </OnDragStart>
+      <OnDragStop>
+        self:StopMovingOrSizing();
+      </OnDragStop>      
+      <OnMouseDown>
+      </OnMouseDown>
+      <OnMouseUp>  
+      </OnMouseUp>      
+    </Scripts>  
+  
+  </Frame>  
+  
+  
+  
+  <Frame name="SmartDebuffOF" movable="true" toplevel="true" frameStrata="MEDIUM" parent="UIParent" hidden="true" enableMouse="true">
+    <Size>
+      <AbsDimension x="264" y="492"/>
+    </Size>
+    <Anchors>
+      <Anchor point="CENTER" relativePoint="CENTER" relativeTo="UIParent">
+        <Offset>
+          <AbsDimension x="-2" y="0"/>
+        </Offset>
+      </Anchor>
+    </Anchors>
+    
+    <!-- Interface\DialogFrame\UI-DialogBox-Background -->
+    <Backdrop name="$parent_Backdrop" bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+      <BackgroundInsets>
+        <AbsInset left="2" right="2" top="2" bottom="2"/>
+      </BackgroundInsets>
+      <TileSize>
+        <AbsValue val="8"/>
+      </TileSize>
+      <EdgeSize>
+        <AbsValue val="8"/>
+      </EdgeSize>
+    </Backdrop>    
+      
+    <Frames>    
+      <!-- GameFontHighlightSmall, GameFontNormalSmall -->
+      <EditBox name="$parent_Title" letters="200" multiLine="true" autoFocus="false">
+        <Size>
+          <AbsDimension x="200" y="20"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="4" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <FontString inherits="GameFontHighlightSmall" justifyH="LEFT"/>
+        <Scripts>       
+          <OnLoad>
+            self:SetAutoFocus(false);
+            self:SetText(SMARTDEBUFF_OPTIONS_TITLE);
+            self:EnableMouse(false);
+            self:EnableKeyboard(false);
+          </OnLoad>          
+        </Scripts>          
+      </EditBox>
+
+      <Button name="$parent_btnClose" inherits="UIPanelCloseButton">      
+        <Size>
+          <AbsDimension x="20" y="20"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeTo="$parent">
+            <Offset>
+              <AbsDimension x="2" y="1"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>          
+        </Scripts>        
+      </Button>      
+      
+      <CheckButton name="$parent_cbGrp1" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="4" y="-20"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText("1");
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffGrp[1]);
+          </OnShow>          
+          <OnClick>
+            SMARTDEBUFF_OFToggleGrp(1);
+          </OnClick>
+        </Scripts>
+      </CheckButton>      
+      
+      <CheckButton name="$parent_cbGrp2" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbGrp1">
+            <Offset>
+              <AbsDimension x="12" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText("2");
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffGrp[2]);
+          </OnShow>          
+          <OnClick>
+            SMARTDEBUFF_OFToggleGrp(2);
+          </OnClick>
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbGrp3" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbGrp2">
+            <Offset>
+              <AbsDimension x="12" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText("3");
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffGrp[3]);
+          </OnShow>          
+          <OnClick>
+            SMARTDEBUFF_OFToggleGrp(3);
+          </OnClick>
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbGrp4" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbGrp3">
+            <Offset>
+              <AbsDimension x="12" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText("4");
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffGrp[4]);
+          </OnShow>                  
+          <OnClick>
+            SMARTDEBUFF_OFToggleGrp(4);
+          </OnClick>
+        </Scripts>
+      </CheckButton>
+          
+      <CheckButton name="$parent_cbGrp5" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbGrp4">
+            <Offset>
+              <AbsDimension x="12" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText("5");
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffGrp[5]);
+          </OnShow>            
+          <OnClick>
+            SMARTDEBUFF_OFToggleGrp(5);
+          </OnClick>
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbGrp6" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbGrp5">
+            <Offset>
+              <AbsDimension x="12" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText("6");
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffGrp[6]);
+          </OnShow>                
+          <OnClick>
+            SMARTDEBUFF_OFToggleGrp(6);
+          </OnClick>
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbGrp7" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbGrp6">
+            <Offset>
+              <AbsDimension x="12" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText("7");
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffGrp[7]);
+          </OnShow>            
+          <OnClick>
+            SMARTDEBUFF_OFToggleGrp(7);
+          </OnClick>
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbGrp8" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbGrp7">
+            <Offset>
+              <AbsDimension x="12" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText("8");
+          </OnLoad>  
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffGrp[8]);
+          </OnShow>                
+          <OnClick>
+            SMARTDEBUFF_OFToggleGrp(8);
+          </OnClick>
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbClassIcon1">
+        <NormalTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\WarriorD"/>
+        <CheckedTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\Warrior"/>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbGrp1">
+            <Offset>
+              <AbsDimension x="0" y="-18"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffClasses["WARRIOR"]);
+          </OnShow>
+          <OnClick>
+            SMARTDEBUFF_Options.DebuffClasses["WARRIOR"] = not SMARTDEBUFF_Options.DebuffClasses["WARRIOR"];
+            SMARTDEBUFF_SetButtons();
+          </OnClick>          
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(SMARTDEBUFF_CLASSES["WARRIOR"], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>        
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbClassIcon2">
+        <NormalTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\PriestD"/>
+        <CheckedTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\Priest"/>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbClassIcon1">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffClasses["PRIEST"]);
+          </OnShow>
+          <OnClick>
+            SMARTDEBUFF_Options.DebuffClasses["PRIEST"] = not SMARTDEBUFF_Options.DebuffClasses["PRIEST"];
+            SMARTDEBUFF_SetButtons();
+          </OnClick>          
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(SMARTDEBUFF_CLASSES["PRIEST"], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>        
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbClassIcon3">
+        <NormalTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\DruidD"/>
+        <CheckedTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\Druid"/>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbClassIcon2">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffClasses["DRUID"]);
+          </OnShow>
+          <OnClick>
+            SMARTDEBUFF_Options.DebuffClasses["DRUID"] = not SMARTDEBUFF_Options.DebuffClasses["DRUID"];
+            SMARTDEBUFF_SetButtons();
+          </OnClick>          
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(SMARTDEBUFF_CLASSES["DRUID"], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>        
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbClassIcon4">
+        <NormalTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\PaladinD"/>
+        <CheckedTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\Paladin"/>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbClassIcon3">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffClasses["PALADIN"]);
+          </OnShow>
+          <OnClick>
+            SMARTDEBUFF_Options.DebuffClasses["PALADIN"] = not SMARTDEBUFF_Options.DebuffClasses["PALADIN"];
+            SMARTDEBUFF_SetButtons();
+          </OnClick>          
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(SMARTDEBUFF_CLASSES["PALADIN"], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>        
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbClassIcon5">
+        <NormalTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\ShamanD"/>
+        <CheckedTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\Shaman"/>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbClassIcon4">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffClasses["SHAMAN"]);
+          </OnShow>
+          <OnClick>
+            SMARTDEBUFF_Options.DebuffClasses["SHAMAN"] = not SMARTDEBUFF_Options.DebuffClasses["SHAMAN"];
+            SMARTDEBUFF_SetButtons();
+          </OnClick>          
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(SMARTDEBUFF_CLASSES["SHAMAN"], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>        
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbClassIcon6">
+        <NormalTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\MageD"/>
+        <CheckedTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\Mage"/>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbClassIcon5">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffClasses["MAGE"]);
+          </OnShow>
+          <OnClick>
+            SMARTDEBUFF_Options.DebuffClasses["MAGE"] = not SMARTDEBUFF_Options.DebuffClasses["MAGE"];
+            SMARTDEBUFF_SetButtons();
+          </OnClick>          
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(SMARTDEBUFF_CLASSES["MAGE"], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>        
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbClassIcon7">
+        <NormalTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\WarlockD"/>
+        <CheckedTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\Warlock"/>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbClassIcon6">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffClasses["WARLOCK"]);
+          </OnShow>
+          <OnClick>
+            SMARTDEBUFF_Options.DebuffClasses["WARLOCK"] = not SMARTDEBUFF_Options.DebuffClasses["WARLOCK"];
+            SMARTDEBUFF_SetButtons();
+          </OnClick>          
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(SMARTDEBUFF_CLASSES["WARLOCK"], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>        
+      </CheckButton>
+
+      <CheckButton name="$parent_cbClassIcon8">
+        <NormalTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\HunterD"/>
+        <CheckedTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\Hunter"/>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbClassIcon7">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffClasses["HUNTER"]);
+          </OnShow>
+          <OnClick>
+            SMARTDEBUFF_Options.DebuffClasses["HUNTER"] = not SMARTDEBUFF_Options.DebuffClasses["HUNTER"];
+            SMARTDEBUFF_SetButtons();
+          </OnClick>          
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(SMARTDEBUFF_CLASSES["HUNTER"], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>        
+      </CheckButton>
+
+      <CheckButton name="$parent_cbClassIcon9">
+        <NormalTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\RogueD"/>
+        <CheckedTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\Rogue"/>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbClassIcon8">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffClasses["ROGUE"]);
+          </OnShow>
+          <OnClick>
+            SMARTDEBUFF_Options.DebuffClasses["ROGUE"] = not SMARTDEBUFF_Options.DebuffClasses["ROGUE"];
+            SMARTDEBUFF_SetButtons();
+          </OnClick>          
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(SMARTDEBUFF_CLASSES["ROGUE"], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>        
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbClassIcon10">
+        <NormalTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\DeathknightD"/>
+        <CheckedTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\Deathknight"/>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbClassIcon9">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.DebuffClasses["DEATHKNIGHT"]);
+          </OnShow>
+          <OnClick>
+            SMARTDEBUFF_Options.DebuffClasses["DEATHKNIGHT"] = not SMARTDEBUFF_Options.DebuffClasses["DEATHKNIGHT"];
+            SMARTDEBUFF_SetButtons();
+          </OnClick>          
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(SMARTDEBUFF_CLASSES["DEATHKNIGHT"], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>        
+      </CheckButton>      
+      
+      <CheckButton name="$parent_cbClassIcon11">
+        <NormalTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\HunterPetD"/>
+        <CheckedTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\HunterPet"/>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbClassIcon10">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.ShowPets);
+          </OnShow>
+          <OnClick>
+            SMARTDEBUFF_Options.ShowPets = not SMARTDEBUFF_Options.ShowPets;
+            SMARTDEBUFF_SetPetButtons(true);
+          </OnClick>          
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(SMARTDEBUFF_OFT_HUNTERPETS, SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>        
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbClassIcon12">
+        <NormalTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\WarlockPetD"/>
+        <CheckedTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\WarlockPet"/>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbClassIcon11">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.ShowPetsWL);
+          </OnShow>
+          <OnClick>
+            SMARTDEBUFF_Options.ShowPetsWL = not SMARTDEBUFF_Options.ShowPetsWL;
+            SMARTDEBUFF_SetPetButtons(true);
+          </OnClick>          
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(SMARTDEBUFF_OFT_WARLOCKPETS, SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>        
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbClassIcon13">
+        <NormalTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\DeathknightPetD"/>
+        <CheckedTexture alphaMode="BLEND" file="Interface\AddOns\SmartDebuff\Icons\DeathknightPet"/>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_cbClassIcon12">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+          <OnShow>
+            self:SetChecked(SMARTDEBUFF_Options.ShowPetsDK);
+          </OnShow>
+          <OnClick>
+            SMARTDEBUFF_Options.ShowPetsDK = not SMARTDEBUFF_Options.ShowPetsDK;
+            SMARTDEBUFF_SetPetButtons(true);
+          </OnClick>          
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(SMARTDEBUFF_OFT_DEATHKNIGHTPETS, SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>        
+      </CheckButton>      
+
+      
+      <CheckButton name="$parent_cbHP" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbClassIcon1">
+            <Offset>
+              <AbsDimension x="0" y="-20"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_HP);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowHP);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowHP = not SMARTDEBUFF_Options.ShowHP;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_HP, SMARTDEBUFF_TT_HP);
+          </OnEnter>          
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbMana" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbHP">
+            <Offset>
+              <AbsDimension x="40" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_MANA);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowMana);
+            end
+          </OnShow>          
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowMana = not SMARTDEBUFF_Options.ShowMana;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_MANA, SMARTDEBUFF_TT_MANA);
+          </OnEnter>          
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbHPText" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbMana">
+            <Offset>
+              <AbsDimension x="56" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_HPTEXT);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowHPText);
+            end
+          </OnShow>          
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowHPText = not SMARTDEBUFF_Options.ShowHPText;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_HPTEXT, SMARTDEBUFF_TT_HPTEXT);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>      
+      
+      <CheckButton name="$parent_cbInvert" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbHP">
+            <Offset>
+              <AbsDimension x="132" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_INVERT);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.Invert);
+            end
+          </OnShow>          
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.Invert = not SMARTDEBUFF_Options.Invert;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_INVERT, SMARTDEBUFF_TT_INVERT);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbClassView" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbHP">
+            <Offset>
+              <AbsDimension x="0" y="-16"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_CLASSVIEW);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.SortedByClass);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.SortedByClass = not SMARTDEBUFF_Options.SortedByClass;
+              SMARTDEBUFF_SetButtons();
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_CLASSVIEW, SMARTDEBUFF_TT_CLASSVIEW);
+          </OnEnter>          
+        </Scripts>
+      </CheckButton>
+      
+      <Button name="$parent_btnOptions" inherits="OptionsButtonTemplate" text="C">
+        <Size>
+            <AbsDimension x="16" y="16" />
+        </Size>    
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbClassView">
+            <Offset>
+              <AbsDimension x="116" y="1"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetNormalFontObject("GameFontNormalSmall");
+            self:SetHighlightFontObject("GameFontHighlightSmall");
+          </OnLoad>        
+          <OnClick>
+            --SMARTDEBUFF_ToggleAOFOrder(1);
+            SMARTDEBUFF_ClassOrderToggle();
+          </OnClick>
+        </Scripts>
+      </Button>      
+      
+      <CheckButton name="$parent_cbClassColors" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbClassView">
+            <Offset>
+              <AbsDimension x="132" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_CLASSCOLOR);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowClassColors);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowClassColors = not SMARTDEBUFF_Options.ShowClassColors;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_CLASSCOLOR, SMARTDEBUFF_TT_CLASSCOLOR);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbHeaders" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbClassView">
+            <Offset>
+              <AbsDimension x="0" y="-16"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_HEADERS);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowHeaders);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowHeaders = not SMARTDEBUFF_Options.ShowHeaders;
+              SMARTDEBUFF_SetStyle();
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_HEADERS, SMARTDEBUFF_TT_HEADERS);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>      
+      
+      <CheckButton name="$parent_cbGrpNr" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbHeaders">
+            <Offset>
+              <AbsDimension x="132" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_GROUPNR);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowGrpNr);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowGrpNr = not SMARTDEBUFF_Options.ShowGrpNr;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_GROUPNR, SMARTDEBUFF_TT_GROUPNR);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>      
+      
+      <CheckButton name="$parent_cbShowLR" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbHeaders">
+            <Offset>
+              <AbsDimension x="0" y="-16"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_SHOWLR);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowLR);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowLR = not SMARTDEBUFF_Options.ShowLR;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_SHOWLR, SMARTDEBUFF_TT_SHOWLR);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbShowHealRange" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbShowLR">
+            <Offset>
+              <AbsDimension x="132" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_HEALRANGE);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowHealRange);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowHealRange = not SMARTDEBUFF_Options.ShowHealRange;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_HEALRANGE, SMARTDEBUFF_TT_HEALRANGE);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbShowAggro" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbShowLR">
+            <Offset>
+              <AbsDimension x="0" y="-16"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_SHOWAGGRO);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowAggro);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowAggro = not SMARTDEBUFF_Options.ShowAggro;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_SHOWAGGRO, SMARTDEBUFF_TT_SHOWAGGRO);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbShowRaidIcon" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbShowAggro">
+            <Offset>
+              <AbsDimension x="132" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_SHOWRAIDICON);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowRaidIcon);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowRaidIcon = not SMARTDEBUFF_Options.ShowRaidIcon;
+              SMARTDEBUFF_SetButtons();
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_SHOWRAIDICON, SMARTDEBUFF_TT_SHOWRAIDICON);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>       
+      
+      <CheckButton name="$parent_cbShowNotRemov" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbShowAggro">
+            <Offset>
+              <AbsDimension x="0" y="-16"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_NOTREMOVABLE);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowNotRemov);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowNotRemov = not SMARTDEBUFF_Options.ShowNotRemov;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_NOTREMOVABLE, SMARTDEBUFF_TT_NOTREMOVABLE);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>          
+        </Scripts>
+      </CheckButton>
+      
+      <Button name="$parent_btnNotRemov" inherits="OptionsButtonTemplate" text="D" hidden="false">
+        <Size>
+            <AbsDimension x="16" y="16" />
+        </Size>    
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbShowNotRemov">
+            <Offset>
+              <AbsDimension x="116" y="1"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetNormalFontObject("GameFontNormalSmall");
+            self:SetHighlightFontObject("GameFontHighlightSmall");
+          </OnLoad>        
+          <OnClick>
+            SMARTDEBUFF_ToggleNRDebuffs();
+          </OnClick>
+        </Scripts>
+      </Button>
+      
+      <CheckButton name="$parent_cbShowSpellIcon" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbShowNotRemov">
+            <Offset>
+              <AbsDimension x="132" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_SHOWSPELLICON);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowSpellIcon);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowSpellIcon = not SMARTDEBUFF_Options.ShowSpellIcon;
+              SMARTDEBUFF_SetButtons();
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_SHOWSPELLICON, SMARTDEBUFF_TT_SHOWSPELLICON);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>
+      
+      <Button name="$parent_btnSpellGuard" inherits="OptionsButtonTemplate" text="S" hidden="false">
+        <Size>
+            <AbsDimension x="16" y="16" />
+        </Size>    
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbShowSpellIcon">
+            <Offset>
+              <AbsDimension x="108" y="1"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetNormalFontObject("GameFontNormalSmall");
+            self:SetHighlightFontObject("GameFontHighlightSmall");
+          </OnLoad>        
+          <OnClick>
+            SMARTDEBUFF_SpellGuardToggle();
+          </OnClick>
+        </Scripts>
+      </Button>      
+      
+      <CheckButton name="$parent_cbTargetMode" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbShowNotRemov">
+            <Offset>
+              <AbsDimension x="0" y="-16"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_TARGETMODE);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.TargetMode);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.TargetMode = not SMARTDEBUFF_Options.TargetMode;
+              SMARTDEBUFF_SetButtons();
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_TARGETMODE, SMARTDEBUFF_TT_TARGETMODE);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>           
+        </Scripts>
+      </CheckButton>
+      
+      <Button name="$parent_btnKeys" inherits="OptionsButtonTemplate" text="K" hidden="false">
+        <Size>
+            <AbsDimension x="16" y="16" />
+        </Size>    
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbTargetMode">
+            <Offset>
+              <AbsDimension x="116" y="1"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetNormalFontObject("GameFontNormalSmall");
+            self:SetHighlightFontObject("GameFontHighlightSmall");
+          </OnLoad>        
+          <OnClick>
+            SMARTDEBUFF_ToggleAOFKeys();
+          </OnClick>
+        </Scripts>
+      </Button>
+      
+      <CheckButton name="$parent_cbShowVehicles" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbTargetMode">
+            <Offset>
+              <AbsDimension x="132" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_VEHICLE);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowVehicles);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowVehicles = not SMARTDEBUFF_Options.ShowVehicles;
+              SMARTDEBUFF_SetButtons();
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_VEHICLE, SMARTDEBUFF_TT_VEHICLE);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>      
+      
+      <CheckButton name="$parent_cbShowInfoRow" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbTargetMode">
+            <Offset>
+              <AbsDimension x="0" y="-16"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_INFOROW);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowInfoRow);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowInfoRow = not SMARTDEBUFF_Options.ShowInfoRow;
+              SMARTDEBUFF_SetStyle();
+              SMARTDEBUFF_CheckSFButtons();
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_INFOROW, SMARTDEBUFF_TT_INFOROW);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbPlaySound" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbShowInfoRow">
+            <Offset>
+              <AbsDimension x="132" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_SOUND);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.UseSound);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.UseSound = not SMARTDEBUFF_Options.UseSound;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_SOUND, SMARTDEBUFF_TT_SOUND);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>      
+      
+      <CheckButton name="$parent_cbShowHeaderRow" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbShowInfoRow">
+            <Offset>
+              <AbsDimension x="0" y="-16"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_HEADERROW);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowHeaderRow);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowHeaderRow = not SMARTDEBUFF_Options.ShowHeaderRow;
+              SMARTDEBUFF_SetStyle();
+              SMARTDEBUFF_CheckSFButtons();
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_HEADERROW, SMARTDEBUFF_TT_HEADERROW);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbShowTooltip" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbShowHeaderRow">
+            <Offset>
+              <AbsDimension x="132" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_TOOLTIP);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowTooltip);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowTooltip = not SMARTDEBUFF_Options.ShowTooltip;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_TOOLTIP, SMARTDEBUFF_TT_TOOLTIP);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>      
+      
+      <CheckButton name="$parent_cbVertical" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbShowHeaderRow">
+            <Offset>
+              <AbsDimension x="0" y="-16"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_VERTICAL);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.Vertical);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.Vertical = not SMARTDEBUFF_Options.Vertical;
+              SMARTDEBUFF_SetStyle();
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_VERTICAL, SMARTDEBUFF_TT_VERTICAL);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>      
+      
+      <CheckButton name="$parent_cbVerticalUp" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbVertical">
+            <Offset>
+              <AbsDimension x="132" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_VERTICALUP);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.VerticalUp);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.VerticalUp = not SMARTDEBUFF_Options.VerticalUp;              
+              SMARTDEBUFF_CheckSFButtons();
+              SMARTDEBUFF_SetStyle();
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_VERTICALUP, SMARTDEBUFF_TT_VERTICALUP);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>      
+      
+      <CheckButton name="$parent_cbShowBackdrop" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbVertical">
+            <Offset>
+              <AbsDimension x="0" y="-16"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_BACKDROP);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowBackdrop);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_ToggleSFBackdrop();
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_BACKDROP, SMARTDEBUFF_TT_BACKDROP);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbShowGradient" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbShowBackdrop">
+            <Offset>
+              <AbsDimension x="132" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_SHOWGRADIENT);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowGradient);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ShowGradient = not SMARTDEBUFF_Options.ShowGradient;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_SHOWGRADIENT, SMARTDEBUFF_TT_SHOWGRADIENT);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>      
+      
+      <CheckButton name="$parent_cbShowInfoFrame" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbShowBackdrop">
+            <Offset>
+              <AbsDimension x="0" y="-16"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_INFOFRAME);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.ShowIF);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_ToggleIF();
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_INFOFRAME, SMARTDEBUFF_TT_INFOFRAME);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>
+      
+      <CheckButton name="$parent_cbAutoHide" inherits="OptionsCheckButtonTemplate" hidden="false">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent_cbShowInfoFrame">
+            <Offset>
+              <AbsDimension x="132" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_AUTOHIDE);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetChecked(SMARTDEBUFF_Options.AutoHide);
+            end
+          </OnShow>
+          <OnClick>
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.AutoHide = not SMARTDEBUFF_Options.AutoHide;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end          
+          </OnClick>
+          <OnEnter>
+            SMARTDEBUFF_SetGameTooltip(self, SMARTDEBUFF_OFT_AUTOHIDE, SMARTDEBUFF_TT_AUTOHIDE);
+          </OnEnter>
+        </Scripts>
+      </CheckButton>      
+      
+      
+      <Slider name="$parent_sldColumns" inherits="OptionsSliderTemplate" hidden="false">
+        <Size>
+          <AbsDimension x="108" y="16"/>
+        </Size>  
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_cbShowInfoFrame">
+            <Offset>
+              <AbsDimension x="8" y="-16"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            SmartDebuffOFSlider_OnLoad(self, 1, 20, 1);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetValue(SMARTDEBUFF_Options.Columns);
+            end
+          </OnShow>          
+          <OnValueChanged>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_COLUMNS .. ": " .. self:GetValue());
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.Columns = self:GetValue();
+              SMARTDEBUFF_SetStyle();
+            end
+          </OnValueChanged>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText("", SMARTDEBUFF_TTC_R, SMARTDEBUFF_TTC_G, SMARTDEBUFF_TTC_B, SMARTDEBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>          
+        </Scripts>
+      </Slider>
+      
+      <Slider name="$parent_sldBarHeight" inherits="OptionsSliderTemplate" hidden="false">
+        <Size>
+          <AbsDimension x="108" y="16"/>
+        </Size>  
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_sldColumns">
+            <Offset>
+              <AbsDimension x="16" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            SmartDebuffOFSlider_OnLoad(self, 2, 20, 1);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetValue(SMARTDEBUFF_Options.BarH);
+            end
+          </OnShow>          
+          <OnValueChanged>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_BARHEIGHT .. ": ".. self:GetValue());
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.BarH = self:GetValue();
+              SMARTDEBUFF_CheckDebuffs(true);
+            end
+          </OnValueChanged>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText("", SMARTDEBUFF_TTC_R, SMARTDEBUFF_TTC_G, SMARTDEBUFF_TTC_B, SMARTDEBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>          
+        </Scripts>
+      </Slider>      
+      
+      
+      <Slider name="$parent_sldCheckInterval" inherits="OptionsSliderTemplate" hidden="false">
+        <Size>
+          <AbsDimension x="108" y="16"/>
+        </Size>  
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_sldColumns">
+            <Offset>
+              <AbsDimension x="0" y="-20"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            SmartDebuffOFSlider_OnLoad(self, 25, 500, 25);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetValue(SMARTDEBUFF_Options.CheckInterval*1000);
+            end
+          </OnShow>          
+          <OnValueChanged>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_INTERVAL .. string.format(" %.0fms", self:GetValue()));
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.CheckInterval = self:GetValue()/1000;
+            end
+          </OnValueChanged>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText("", SMARTDEBUFF_TTC_R, SMARTDEBUFF_TTC_G, SMARTDEBUFF_TTC_B, SMARTDEBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>          
+        </Scripts>
+      </Slider>
+      
+      <Slider name="$parent_sldFontsize" inherits="OptionsSliderTemplate" hidden="false">
+        <Size>
+          <AbsDimension x="108" y="16"/>
+        </Size>  
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_sldCheckInterval">
+            <Offset>
+              <AbsDimension x="16" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            SmartDebuffOFSlider_OnLoad(self, 5, 18, 1);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetValue(SMARTDEBUFF_Options.Fontsize);
+            end
+          </OnShow>          
+          <OnValueChanged>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_FONTSIZE .. ": ".. self:GetValue());
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.Fontsize = self:GetValue();
+              SMARTDEBUFF_CheckDebuffs(true);
+            end
+          </OnValueChanged>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText("", SMARTDEBUFF_TTC_R, SMARTDEBUFF_TTC_G, SMARTDEBUFF_TTC_B, SMARTDEBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>          
+        </Scripts>
+      </Slider>      
+      
+      
+      <Slider name="$parent_sldBtnW" inherits="OptionsSliderTemplate" hidden="false">
+        <Size>
+          <AbsDimension x="108" y="16"/>
+        </Size>  
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_sldCheckInterval">
+            <Offset>
+              <AbsDimension x="0" y="-20"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            SmartDebuffOFSlider_OnLoad(self, 12, 108, 4);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetValue(SMARTDEBUFF_Options.BtnW);
+            end
+          </OnShow>          
+          <OnValueChanged>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_WIDTH .. ": ".. self:GetValue());
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.BtnW = self:GetValue();
+              SMARTDEBUFF_SetStyle();
+            end
+          </OnValueChanged>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText("", SMARTDEBUFF_TTC_R, SMARTDEBUFF_TTC_G, SMARTDEBUFF_TTC_B, SMARTDEBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>          
+        </Scripts>
+      </Slider>
+      
+      <Slider name="$parent_sldBtnH" inherits="OptionsSliderTemplate" hidden="false">
+        <Size>
+          <AbsDimension x="108" y="16"/>
+        </Size>  
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_sldBtnW">
+            <Offset>
+              <AbsDimension x="16" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            SmartDebuffOFSlider_OnLoad(self, 12, 108, 4);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetValue(SMARTDEBUFF_Options.BtnH);
+            end
+          </OnShow>          
+          <OnValueChanged>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_HEIGHT .. ": ".. self:GetValue());
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.BtnH = self:GetValue();
+              SMARTDEBUFF_SetStyle();
+            end
+          </OnValueChanged>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText("", SMARTDEBUFF_TTC_R, SMARTDEBUFF_TTC_G, SMARTDEBUFF_TTC_B, SMARTDEBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>          
+        </Scripts>
+      </Slider>       
+      
+      <Slider name="$parent_sldNormal" inherits="OptionsSliderTemplate" hidden="false">
+        <Size>
+          <AbsDimension x="160" y="16"/>
+        </Size>  
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_sldBtnW">
+            <Offset>
+              <AbsDimension x="0" y="-24"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            SmartDebuffOFSlider_OnLoad(self, 0, 100, 1);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetValue(SMARTDEBUFF_Options.ANormal * 100);
+            end
+          </OnShow>          
+          <OnValueChanged>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_OPACITYNORMAL .. ": ".. self:GetValue() .. "%");
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ANormal = self:GetValue() / 100;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end
+            local r, g, b = SmartDebuffOF_csNormal:GetColorRGB();
+            SmartDebuffOF_btnTest.texture:SetTexture(r, g, b, 0.6);            
+            SmartDebuffOF_btnTest:SetAlpha(SmartDebuffOF_sldNormal:GetValue() / 100);
+            SmartDebuffOF_btnTest:SetText("Default");
+          </OnValueChanged>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText("", SMARTDEBUFF_TTC_R, SMARTDEBUFF_TTC_G, SMARTDEBUFF_TTC_B, SMARTDEBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>          
+        </Scripts>
+      </Slider>
+      
+      <ColorSelect name="$parent_csNormal" enableMouse="true">
+        <Size><AbsDimension x="32" y="32" /></Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_sldNormal">
+            <Offset>
+              <AbsDimension x="6" y="8"></AbsDimension>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <ColorWheelTexture name="$parentPickerWheel">        <!-- Color Round -->
+          <Size><AbsDimension x="32" y="32" /></Size>
+        </ColorWheelTexture>
+        <ColorWheelThumbTexture file="Interface\Buttons\UI-ColorPicker-Buttons"> <!-- Target -->
+          <Size>
+            <AbsDimension x="10" y="10"/>
+          </Size>
+          <TexCoords left="0" right="0.15625" top="0" bottom="0.625"/>
+        </ColorWheelThumbTexture>
+        <Scripts>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetColorRGB(SMARTDEBUFF_Options.ColNormal.r, SMARTDEBUFF_Options.ColNormal.g, SMARTDEBUFF_Options.ColNormal.b);
+            end
+          </OnShow>
+          <OnColorSelect>            
+            local r, g, b = self:GetColorRGB();
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ColNormal.r = r;
+              SMARTDEBUFF_Options.ColNormal.g = g;
+              SMARTDEBUFF_Options.ColNormal.b = b;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end
+            SmartDebuffOF_btnTest.texture:SetTexture(r, g, b, 0.6);
+            SmartDebuffOF_btnTest:SetAlpha(SmartDebuffOF_sldNormal:GetValue() / 100);
+            SmartDebuffOF_btnTest:SetText("Default");
+          </OnColorSelect>
+        </Scripts>
+      </ColorSelect>
+      
+      <ColorSelect name="$parent_csNotRemov" enableMouse="true">
+        <Size><AbsDimension x="32" y="32" /></Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_csNormal">
+            <Offset>
+              <AbsDimension x="6" y="0"></AbsDimension>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <ColorWheelTexture name="$parentPickerWheel">        <!-- Color Round -->
+          <Size><AbsDimension x="32" y="32" /></Size>
+        </ColorWheelTexture>
+        <ColorWheelThumbTexture file="Interface\Buttons\UI-ColorPicker-Buttons"> <!-- Target -->
+          <Size>
+            <AbsDimension x="10" y="10"/>
+          </Size>
+          <TexCoords left="0" right="0.15625" top="0" bottom="0.625"/>
+        </ColorWheelThumbTexture>
+        <Scripts>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetColorRGB(SMARTDEBUFF_Options.ColDebuffNR.r, SMARTDEBUFF_Options.ColDebuffNR.g, SMARTDEBUFF_Options.ColDebuffNR.b);
+            end
+          </OnShow>
+          <OnColorSelect>            
+            local r, g, b = self:GetColorRGB();
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ColDebuffNR.r = r;
+              SMARTDEBUFF_Options.ColDebuffNR.g = g;
+              SMARTDEBUFF_Options.ColDebuffNR.b = b;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end
+            SmartDebuffOF_btnTest.texture:SetTexture(r, g, b, 0.6);
+            SmartDebuffOF_btnTest:SetAlpha(SmartDebuffOF_sldDebuff:GetValue() / 100);
+            SmartDebuffOF_btnTest:SetText(SMARTDEBUFF_OFT_NOTREMOVABLE);
+          </OnColorSelect>
+        </Scripts>
+      </ColorSelect>      
+      
+      
+      <Slider name="$parent_sldNormalOOR" inherits="OptionsSliderTemplate" hidden="false">
+        <Size>
+          <AbsDimension x="160" y="16"/>
+        </Size>  
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_sldNormal">
+            <Offset>
+              <AbsDimension x="0" y="-20"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            SmartDebuffOFSlider_OnLoad(self, 0, 100, 1);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetValue(SMARTDEBUFF_Options.ANormalOOR * 100);
+            end
+          </OnShow>          
+          <OnValueChanged>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_OPACITYOOR .. ": ".. self:GetValue() .. "%");
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ANormalOOR = self:GetValue() / 100;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end
+            local r, g, b = SmartDebuffOF_csNormal:GetColorRGB();
+            SmartDebuffOF_btnTest.texture:SetTexture(r, g, b, 0.6);
+            SmartDebuffOF_btnTest:SetAlpha(SmartDebuffOF_sldNormalOOR:GetValue() / 100);
+            SmartDebuffOF_btnTest:SetText("OOR");
+          </OnValueChanged>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText("", SMARTDEBUFF_TTC_R, SMARTDEBUFF_TTC_G, SMARTDEBUFF_TTC_B, SMARTDEBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>          
+        </Scripts>
+      </Slider>
+            
+      <Slider name="$parent_sldDebuff" inherits="OptionsSliderTemplate" hidden="false">
+        <Size>
+          <AbsDimension x="120" y="16"/>
+        </Size>  
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_sldNormalOOR">
+            <Offset>
+              <AbsDimension x="0" y="-20"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            SmartDebuffOFSlider_OnLoad(self, 0, 100, 1);
+          </OnLoad>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetValue(SMARTDEBUFF_Options.ADebuff * 100);
+            end
+          </OnShow>          
+          <OnValueChanged>
+            getglobal(self:GetName().."Text"):SetText(SMARTDEBUFF_OFT_OPACITYDEBUFF .. ": ".. self:GetValue() .. "%");
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ADebuff = self:GetValue() / 100;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end
+            local r, g, b = SmartDebuffOF_csDebuffL:GetColorRGB();
+            SmartDebuffOF_btnTest.texture:SetTexture(r, g, b, 0.6);              
+            SmartDebuffOF_btnTest:SetAlpha(SmartDebuffOF_sldDebuff:GetValue() / 100);
+            SmartDebuffOF_btnTest:SetText("Debuff L");
+          </OnValueChanged>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText("", SMARTDEBUFF_TTC_R, SMARTDEBUFF_TTC_G, SMARTDEBUFF_TTC_B, SMARTDEBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>          
+        </Scripts>
+      </Slider>
+      
+      <ColorSelect name="$parent_csDebuffL" enableMouse="true">
+        <Size><AbsDimension x="32" y="32" /></Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_sldDebuff">
+            <Offset>
+              <AbsDimension x="6" y="8"></AbsDimension>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <ColorWheelTexture name="$parentPickerWheel">        <!-- Color Round -->
+          <Size><AbsDimension x="32" y="32" /></Size>
+        </ColorWheelTexture>
+        <ColorWheelThumbTexture file="Interface\Buttons\UI-ColorPicker-Buttons"> <!-- Target -->
+          <Size>
+            <AbsDimension x="10" y="10"/>
+          </Size>
+          <TexCoords left="0" right="0.15625" top="0" bottom="0.625"/>
+        </ColorWheelThumbTexture>
+        <Scripts>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetColorRGB(SMARTDEBUFF_Options.ColDebuffL.r, SMARTDEBUFF_Options.ColDebuffL.g, SMARTDEBUFF_Options.ColDebuffL.b);
+            end
+          </OnShow>
+          <OnColorSelect>
+            local r, g, b = self:GetColorRGB();
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ColDebuffL.r = r;
+              SMARTDEBUFF_Options.ColDebuffL.g = g;
+              SMARTDEBUFF_Options.ColDebuffL.b = b;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end
+            SmartDebuffOF_btnTest.texture:SetTexture(r, g, b, 1.0);
+            SmartDebuffOF_btnTest:SetAlpha(SmartDebuffOF_sldDebuff:GetValue() / 100);
+            SmartDebuffOF_btnTest:SetText("Debuff L");
+          </OnColorSelect>
+        </Scripts>
+      </ColorSelect>
+      
+      <ColorSelect name="$parent_csDebuffR" enableMouse="true">
+        <Size><AbsDimension x="32" y="32" /></Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_csDebuffL">
+            <Offset>
+              <AbsDimension x="6" y="0"></AbsDimension>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <ColorWheelTexture name="$parentPickerWheel">        <!-- Color Round -->
+          <Size><AbsDimension x="32" y="32" /></Size>
+        </ColorWheelTexture>
+        <ColorWheelThumbTexture file="Interface\Buttons\UI-ColorPicker-Buttons"> <!-- Target -->
+          <Size>
+            <AbsDimension x="10" y="10"/>
+          </Size>
+          <TexCoords left="0" right="0.15625" top="0" bottom="0.625"/>
+        </ColorWheelThumbTexture>
+        <Scripts>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetColorRGB(SMARTDEBUFF_Options.ColDebuffR.r, SMARTDEBUFF_Options.ColDebuffR.g, SMARTDEBUFF_Options.ColDebuffR.b);
+            end
+          </OnShow>
+          <OnColorSelect>
+            local r, g, b = self:GetColorRGB();
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ColDebuffR.r = r;
+              SMARTDEBUFF_Options.ColDebuffR.g = g;
+              SMARTDEBUFF_Options.ColDebuffR.b = b;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end
+            SmartDebuffOF_btnTest.texture:SetTexture(r, g, b, 1.0);
+            SmartDebuffOF_btnTest:SetAlpha(SmartDebuffOF_sldDebuff:GetValue() / 100);
+            SmartDebuffOF_btnTest:SetText("Debuff R");
+          </OnColorSelect>
+        </Scripts>
+      </ColorSelect>
+      
+      <ColorSelect name="$parent_csDebuffM" enableMouse="true">
+        <Size><AbsDimension x="32" y="32" /></Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_csDebuffR">
+            <Offset>
+              <AbsDimension x="6" y="0"></AbsDimension>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <ColorWheelTexture name="$parentPickerWheel">        <!-- Color Round -->
+          <Size><AbsDimension x="32" y="32" /></Size>
+        </ColorWheelTexture>
+        <ColorWheelThumbTexture file="Interface\Buttons\UI-ColorPicker-Buttons"> <!-- Target -->
+          <Size>
+            <AbsDimension x="10" y="10"/>
+          </Size>
+          <TexCoords left="0" right="0.15625" top="0" bottom="0.625"/>
+        </ColorWheelThumbTexture>
+        <Scripts>
+          <OnShow>
+            if (SMARTDEBUFF_Options) then
+              self:SetColorRGB(SMARTDEBUFF_Options.ColDebuffM.r, SMARTDEBUFF_Options.ColDebuffM.g, SMARTDEBUFF_Options.ColDebuffM.b);
+            end
+          </OnShow>
+          <OnColorSelect>
+            local r, g, b = self:GetColorRGB();
+            if (SMARTDEBUFF_Options) then
+              SMARTDEBUFF_Options.ColDebuffM.r = r;
+              SMARTDEBUFF_Options.ColDebuffM.g = g;
+              SMARTDEBUFF_Options.ColDebuffM.b = b;
+              SMARTDEBUFF_CheckDebuffs(true);
+            end
+            SmartDebuffOF_btnTest.texture:SetTexture(r, g, b, 1.0);
+            SmartDebuffOF_btnTest:SetAlpha(SmartDebuffOF_sldDebuff:GetValue() / 100);
+            SmartDebuffOF_btnTest:SetText("Debuff M");
+          </OnColorSelect>
+        </Scripts>
+      </ColorSelect>
+      
+      <Button name="$parent_btnReset" inherits="OptionsButtonTemplate" text="Reset Colors">
+        <Size>
+          <AbsDimension x="96" y="16" />
+        </Size>      
+        <Anchors>
+          <Anchor point="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="2" y="2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetNormalFontObject("GameFontNormalSmall");
+            self:SetHighlightFontObject("GameFontHighlightSmall");
+          </OnLoad>        
+          <OnClick>
+            SMARTDEBUFF_SetDefaultColors();
+            if (SMARTDEBUFF_Options) then
+              SmartDebuffOF_csDebuffL:SetColorRGB(SMARTDEBUFF_Options.ColDebuffL.r, SMARTDEBUFF_Options.ColDebuffL.g, SMARTDEBUFF_Options.ColDebuffL.b);
+              SmartDebuffOF_csDebuffR:SetColorRGB(SMARTDEBUFF_Options.ColDebuffR.r, SMARTDEBUFF_Options.ColDebuffR.g, SMARTDEBUFF_Options.ColDebuffR.b);
+              SmartDebuffOF_csDebuffM:SetColorRGB(SMARTDEBUFF_Options.ColDebuffM.r, SMARTDEBUFF_Options.ColDebuffM.g, SMARTDEBUFF_Options.ColDebuffM.b);
+              SmartDebuffOF_csNotRemov:SetColorRGB(SMARTDEBUFF_Options.ColDebuffNR.r, SMARTDEBUFF_Options.ColDebuffNR.g, SMARTDEBUFF_Options.ColDebuffNR.b);
+              SmartDebuffOF_csNormal:SetColorRGB(SMARTDEBUFF_Options.ColNormal.r, SMARTDEBUFF_Options.ColNormal.g, SMARTDEBUFF_Options.ColNormal.b);              
+            end
+          </OnClick>
+        </Scripts>
+      </Button>      
+      
+      <Button name="$parent_btnTest" inherits="SecureActionButtonTemplate">
+        <Size><AbsDimension x="264" y="20" /></Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent">
+            <Offset>
+              <AbsDimension x="1" y="0"></AbsDimension>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetNormalFontObject("GameFontHighlightLarge");
+            self:SetHighlightFontObject("GameFontHighlightLarge");
+            self.texture = self:CreateTexture(nil, "BORDER");
+            self.texture:SetTexture(0.39, 0.42, 0.64, 1.0);
+            self.texture:SetAllPoints(self);
+            self.texture:SetBlendMode("BLEND");
+            self.texture:SetAllPoints(self);
+            self:SetText("Test");
+            self:SetAlpha(0.2);
+          </OnLoad>
+          <OnShow>
+            self.texture:SetTexture(0.39, 0.42, 0.64, 0.6);
+            self:SetText("Test");
+            self:SetAlpha(1.0);
+          </OnShow>          
+        </Scripts>
+      </Button>      
+
+    </Frames>
+
+    <Scripts>  
+      <OnLoad>
+        self:RegisterForDrag("LeftButton");
+        self:EnableMouse(true);
+      </OnLoad>
+      <OnShow>
+        SMARTDEBUFF_OFOnShow();
+      </OnShow>
+      <OnHide>
+        SMARTDEBUFF_OFOnHide();
+        self:StopMovingOrSizing();
+      </OnHide>
+      <OnMouseDown>
+        if (arg1 == "LeftButton") then
+          self:StartMoving();
+        end
+      </OnMouseDown>
+      <OnMouseUp>
+        if (arg1 == "LeftButton") then
+          self:StopMovingOrSizing();
+        end
+      </OnMouseUp>
+      <OnEnter>
+      </OnEnter>
+      <OnLeave>
+      </OnLeave>      
+    </Scripts>  
+  
+  </Frame>
+  
+  
+  <Frame name="SmartDebuffClassOrder" toplevel="false" parent="SmartDebuffOF" hidden="true" enableMouse="true">
+    <Size>
+      <AbsDimension x="172" y="500"/>
+    </Size>
+    <Anchors>
+       <Anchor point="TOPLEFT" relativeTo="SmartDebuffOF" relativePoint="TOPRIGHT">
+         <Offset>
+           <AbsDimension x="2" y="0"/>
+         </Offset>
+       </Anchor>
+     </Anchors>
+    
+    <Backdrop name="$parent_Backdrop" bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+      <BackgroundInsets>
+        <AbsInset left="2" right="2" top="2" bottom="2"/>
+      </BackgroundInsets>
+      <TileSize>
+        <AbsValue val="8"/>
+      </TileSize>
+      <EdgeSize>
+        <AbsValue val="8"/>
+      </EdgeSize>
+    </Backdrop>    
+      
+    <Frames>
+      <EditBox name="$parent_Title" letters="200" multiLine="true" autoFocus="false">
+        <Size>
+          <AbsDimension x="164" y="20"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="4" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <FontString inherits="GameFontHighlightSmall" justifyH="CENTER"/>
+        <Scripts>       
+          <OnLoad>
+            self:SetAutoFocus(false);
+            self:EnableMouse(false);
+            self:EnableKeyboard(false);
+          </OnLoad>        
+        </Scripts>          
+      </EditBox>
+      
+      <ScrollFrame name="$parent_ScrollFrame" inherits="FauxScrollFrameTemplate">
+        <Size>
+          <AbsDimension x="140" y="410"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parent_Title" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-8"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnVerticalScroll>
+            FauxScrollFrame_OnVerticalScroll(self, offset, 12, SMARTDEBUFF_ClassOrderOnScroll); 
+          </OnVerticalScroll>
+          <OnShow>
+            SMARTDEBUFF_ClassOrderOnScroll(self);
+          </OnShow>
+        </Scripts>
+      </ScrollFrame>      
+
+      <Button name="$parent_btnReset" inherits="OptionsButtonTemplate" text="Reset">
+        <Size>
+          <AbsDimension x="64" y="16" />
+        </Size>      
+        <Anchors>
+          <Anchor point="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="4" y="4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetNormalFontObject("GameFontNormalSmall");
+            self:SetHighlightFontObject("GameFontHighlightSmall");
+          </OnLoad>        
+          <OnClick>
+            SMARTDEBUFF_SetDefaultClassOrder();
+            SMARTDEBUFF_ClassOrderOnScroll();
+            SMARTDEBUFF_SetButtons();
+          </OnClick>
+        </Scripts>
+      </Button>
+      
+      <Button name="$parent_btnClose" inherits="UIPanelCloseButton">      
+        <Size>
+          <AbsDimension x="20" y="20"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeTo="$parent">
+            <Offset>
+              <AbsDimension x="2" y="2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>          
+        </Scripts>        
+      </Button>      
+      
+    </Frames>
+    <Scripts>
+      <OnLoad>
+        self:SetHeight(SmartDebuffOF:GetHeight());
+      </OnLoad>     
+      <OnShow>
+        self:SetHeight(SmartDebuffOF:GetHeight());
+        SMARTDEBUFF_ClassOrderOnShow(self);
+      </OnShow>
+      <OnHide>
+        SMARTDEBUFF_ClassOrderOnHide(self);
+      </OnHide>
+    </Scripts>  
+  
+  </Frame>    
+  
+  
+  
+  <Frame name="SmartDebuffNRDebuffs" toplevel="false" parent="SmartDebuffOF" hidden="true" enableMouse="true">
+    <Size>
+      <AbsDimension x="172" y="500"/>
+    </Size>
+    <Anchors>
+       <Anchor point="TOPLEFT" relativeTo="SmartDebuffOF" relativePoint="TOPRIGHT">
+         <Offset>
+           <AbsDimension x="2" y="0"/>
+         </Offset>
+       </Anchor>
+     </Anchors>
+    
+    <Backdrop name="$parent_Backdrop" bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+      <BackgroundInsets>
+        <AbsInset left="2" right="2" top="2" bottom="2"/>
+      </BackgroundInsets>
+      <TileSize>
+        <AbsValue val="8"/>
+      </TileSize>
+      <EdgeSize>
+        <AbsValue val="8"/>
+      </EdgeSize>
+    </Backdrop>    
+      
+    <Frames>
+      <EditBox name="$parent_Title" letters="200" multiLine="true" autoFocus="false">
+        <Size>
+          <AbsDimension x="164" y="20"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="4" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <FontString inherits="GameFontHighlightSmall" justifyH="CENTER"/>
+        <Scripts>       
+          <OnLoad>
+            self:SetAutoFocus(false);
+            self:EnableMouse(false);
+            self:EnableKeyboard(false);
+          </OnLoad>        
+        </Scripts>          
+      </EditBox>
+      
+			<EditBox name="$parent_txtIn" autoFocus="false" inherits="InputBoxTemplate">
+				<Size>
+					<AbsDimension x="160" y="16"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title" relativePoint="BOTTOMLEFT" font="ChatFontNormal">
+						<Offset>
+							<AbsDimension x="4" y="-4"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnTabPressed>
+					</OnTabPressed>
+					<OnEnterPressed>						
+						SMARTDEBUFF_AddTextToTable(self, SMARTDEBUFF_Options.NotRemovableDebuffs);
+            SMARTDEBUFF_NRDOnScroll();
+					</OnEnterPressed>
+				</Scripts>				
+			</EditBox>      
+      
+      <ScrollFrame name="$parent_ScrollFrame" inherits="FauxScrollFrameTemplate">
+        <Size>
+          <AbsDimension x="140" y="410"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parent_txtIn" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="-4" y="-8"/>
+            </Offset>
+          </Anchor>
+          <!-- 
+          <Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT">
+            <Offset>
+              <AbsDimension x="-30" y="20"/>
+            </Offset>
+          </Anchor> 
+          -->
+        </Anchors>
+        <Scripts>
+          <OnVerticalScroll>
+            FauxScrollFrame_OnVerticalScroll(self, offset, 12, SMARTDEBUFF_NRDOnScroll); 
+          </OnVerticalScroll>
+          <OnShow>
+            SMARTDEBUFF_NRDOnScroll(self);
+          </OnShow>
+        </Scripts>
+      </ScrollFrame>      
+
+      <Button name="$parent_btnReset" inherits="OptionsButtonTemplate" text="Reset">
+        <Size>
+          <AbsDimension x="64" y="16" />
+        </Size>      
+        <Anchors>
+          <Anchor point="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="4" y="4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetNormalFontObject("GameFontNormalSmall");
+            self:SetHighlightFontObject("GameFontHighlightSmall");
+          </OnLoad>        
+          <OnClick>
+            SMARTDEBUFF_SetDefaultNotRemovableDebuffs();
+            SMARTDEBUFF_NRDOnScroll();
+          </OnClick>
+        </Scripts>
+      </Button>
+      
+      <Button name="$parent_btnClose" inherits="UIPanelCloseButton">      
+        <Size>
+          <AbsDimension x="20" y="20"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeTo="$parent">
+            <Offset>
+              <AbsDimension x="2" y="2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>          
+        </Scripts>        
+      </Button>      
+      
+    </Frames>
+    <Scripts>
+      <OnLoad>
+        self:SetHeight(SmartDebuffOF:GetHeight());
+      </OnLoad>     
+      <OnShow>
+        self:SetHeight(SmartDebuffOF:GetHeight());
+        SMARTDEBUFF_NRDebuffsOnShow(self);
+      </OnShow>
+      <OnHide>
+        SMARTDEBUFF_NRDebuffsOnHide(self);
+      </OnHide>
+    </Scripts>  
+  
+  </Frame>
+  
+  
+  <Frame name="SmartDebuffSpellGuard" toplevel="false" parent="SmartDebuffOF" hidden="true" enableMouse="true">
+    <Size>
+      <AbsDimension x="172" y="500"/>
+    </Size>
+    <Anchors>
+       <Anchor point="TOPLEFT" relativeTo="SmartDebuffOF" relativePoint="TOPRIGHT">
+         <Offset>
+           <AbsDimension x="2" y="0"/>
+         </Offset>
+       </Anchor>
+     </Anchors>
+    
+    <Backdrop name="$parent_Backdrop" bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+      <BackgroundInsets>
+        <AbsInset left="2" right="2" top="2" bottom="2"/>
+      </BackgroundInsets>
+      <TileSize>
+        <AbsValue val="8"/>
+      </TileSize>
+      <EdgeSize>
+        <AbsValue val="8"/>
+      </EdgeSize>
+    </Backdrop>    
+      
+    <Frames>
+      <EditBox name="$parent_Title" letters="200" multiLine="true" autoFocus="false">
+        <Size>
+          <AbsDimension x="164" y="20"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="4" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <FontString inherits="GameFontHighlightSmall" justifyH="CENTER"/>
+        <Scripts>       
+          <OnLoad>
+            self:SetAutoFocus(false);
+            self:EnableMouse(false);
+            self:EnableKeyboard(false);
+          </OnLoad>        
+        </Scripts>          
+      </EditBox>
+      
+			<EditBox name="$parent_txtIn" autoFocus="false" inherits="InputBoxTemplate">
+				<Size>
+					<AbsDimension x="160" y="16"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title" relativePoint="BOTTOMLEFT" font="ChatFontNormal">
+						<Offset>
+							<AbsDimension x="4" y="-4"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnTabPressed>
+					</OnTabPressed>
+					<OnEnterPressed>						
+						SMARTDEBUFF_AddTextToTable(self, SMARTDEBUFF_Options.SpellGuard)
+            SMARTDEBUFF_SpellGuardOnScroll();
+					</OnEnterPressed>
+				</Scripts>				
+			</EditBox>      
+      
+      <ScrollFrame name="$parent_ScrollFrame" inherits="FauxScrollFrameTemplate">
+        <Size>
+          <AbsDimension x="140" y="410"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parent_txtIn" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="-4" y="-8"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnVerticalScroll>
+            FauxScrollFrame_OnVerticalScroll(self, offset, 12, SMARTDEBUFF_SpellGuardOnScroll); 
+          </OnVerticalScroll>
+          <OnShow>
+            SMARTDEBUFF_SpellGuardOnScroll(self);
+          </OnShow>
+        </Scripts>
+      </ScrollFrame>      
+
+      <Button name="$parent_btnReset" inherits="OptionsButtonTemplate" text="Reset">
+        <Size>
+          <AbsDimension x="64" y="16" />
+        </Size>      
+        <Anchors>
+          <Anchor point="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="4" y="4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetNormalFontObject("GameFontNormalSmall");
+            self:SetHighlightFontObject("GameFontHighlightSmall");
+          </OnLoad>        
+          <OnClick>
+            SMARTDEBUFF_SetDefaultSpellGuard();
+            SMARTDEBUFF_SpellGuardOnScroll();
+          </OnClick>
+        </Scripts>
+      </Button>
+      
+      <Button name="$parent_btnClose" inherits="UIPanelCloseButton">      
+        <Size>
+          <AbsDimension x="20" y="20"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeTo="$parent">
+            <Offset>
+              <AbsDimension x="2" y="2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>          
+        </Scripts>        
+      </Button>      
+      
+    </Frames>
+    <Scripts>
+      <OnLoad>
+        self:SetHeight(SmartDebuffOF:GetHeight());
+      </OnLoad>     
+      <OnShow>
+        self:SetHeight(SmartDebuffOF:GetHeight());
+        SMARTDEBUFF_SpellGuardOnShow(self);
+      </OnShow>
+      <OnHide>
+        SMARTDEBUFF_SpellGuardOnHide(self);
+      </OnHide>
+    </Scripts>  
+  
+  </Frame>  
+  
+  
+  
+  <Frame name="SmartDebuffAOFKeys" toplevel="false" parent="SmartDebuffOF" hidden="true" enableMouse="true">
+    <Size>
+      <AbsDimension x="172" y="500"/>
+    </Size>
+    <Anchors>
+       <Anchor point="TOPLEFT" relativeTo="SmartDebuffOF" relativePoint="TOPRIGHT">
+         <Offset>
+           <AbsDimension x="2" y="0"/>
+         </Offset>
+       </Anchor>
+     </Anchors>
+    
+    <Backdrop name="$parent_Backdrop" bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+      <BackgroundInsets>
+        <AbsInset left="2" right="2" top="2" bottom="2"/>
+      </BackgroundInsets>
+      <TileSize>
+        <AbsValue val="8"/>
+      </TileSize>
+      <EdgeSize>
+        <AbsValue val="8"/>
+      </EdgeSize>
+    </Backdrop>    
+      
+    <Frames>
+      <Button name="$parent_btnReset" inherits="OptionsButtonTemplate" text="Reset">
+        <Size>
+          <AbsDimension x="64" y="16" />
+        </Size>      
+        <Anchors>
+          <Anchor point="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="4" y="4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetNormalFontObject("GameFontNormalSmall");
+            self:SetHighlightFontObject("GameFontHighlightSmall");
+          </OnLoad>        
+          <OnClick>
+            SMARTDEBUFF_SetDefaultKeys(false);
+            SmartDebuffAOFKeys_OnShow(self);            
+          </OnClick>
+        </Scripts>
+      </Button>      
+      
+    </Frames>
+    
+    <Scripts>
+      <OnLoad>
+        self:SetHeight(SmartDebuffOF:GetHeight());
+      </OnLoad>     
+      <OnShow>
+        self:SetHeight(SmartDebuffOF:GetHeight());
+        SmartDebuffAOFKeys_OnShow(self);
+      </OnShow>
+      <OnHide>
+        SMARTDEBUFF_SetButtons();
+      </OnHide>
+    </Scripts>  
+  
+  </Frame>  
+
+
+  <Frame name="SmartDebuffWNF" movable="true" toplevel="true" frameStrata="MEDIUM" parent="UIParent" hidden="true" enableMouse="true">
+    <Size>
+      <AbsDimension x="200" y="70"/>
+    </Size>
+    <Anchors>
+       <Anchor point="TOPLEFT" relativeTo="SmartDebuffOF" relativePoint="TOPRIGHT">
+         <Offset>
+           <AbsDimension x="2" y="0"/>
+         </Offset>
+       </Anchor>
+     </Anchors>
+    
+    <!-- Interface\DialogFrame\UI-DialogBox-Background -->
+    <Backdrop name="$parent_Backdrop" bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+      <BackgroundInsets>
+        <AbsInset left="2" right="2" top="2" bottom="2"/>
+      </BackgroundInsets>
+      <TileSize>
+        <AbsValue val="8"/>
+      </TileSize>
+      <EdgeSize>
+        <AbsValue val="8"/>
+      </EdgeSize>
+    </Backdrop>    
+    
+    <Frames>
+      
+      <!-- GameFontHighlightSmall, GameFontNormalSmall -->
+      <EditBox name="$parent_lblText" letters="2000" multiLine="true" autoFocus="false">
+        <Size>
+          <AbsDimension x="192" y="66"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent">
+            <Offset>
+              <AbsDimension x="4" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <FontString inherits="GameFontNormalSmall" justifyH="LEFT"/>
+        <Scripts>       
+          <OnLoad>
+            self:SetAutoFocus(false);
+            self:SetText("");
+            self:EnableMouse(false);
+            self:EnableKeyboard(false);
+            self:SetHeight(SmartDebuffOF:GetHeight()-4);
+          </OnLoad>          
+        </Scripts>          
+      </EditBox>
+      
+      <Button name="$parent_btnClose" inherits="UIPanelCloseButton">      
+        <Size>
+          <AbsDimension x="20" y="20"/>
+        </Size>      
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeTo="$parent">
+            <Offset>
+              <AbsDimension x="2" y="2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>          
+        </Scripts>        
+      </Button>      
+
+    </Frames>
+
+    <Scripts>  
+      <OnLoad>
+        self:SetHeight(SmartDebuffOF:GetHeight());
+      </OnLoad>
+      <OnShow>
+        if (SmartDebuffAOFKeys:IsVisible()) then
+          self:SetPoint("TOPLEFT", "SmartDebuffAOFKeys", "TOPRIGHT", 2, 0);
+        else
+          self:SetPoint("TOPLEFT", "SmartDebuffOF", "TOPRIGHT", 2, 0);
+        end
+      </OnShow>
+      <OnHide>
+        self:StopMovingOrSizing();
+      </OnHide>
+      <OnDragStart>
+      </OnDragStart>
+      <OnDragStop>
+      </OnDragStop>      
+      <OnMouseDown>
+      </OnMouseDown>
+      <OnMouseUp>  
+      </OnMouseUp>      
+    </Scripts>  
+  
+  </Frame>  
+  
+    
+</Ui>

@@ -1,0 +1,17 @@
+## Interface: 30300
+## Title: Smart|cffffffffDebuff|r by |cff00ff00Aeldra|r
+## Version: 3.3f
+## Author: |cff20d2ffAeldra|r (EU-Proudmoore)
+## Notes: Use << /sdb >> for debuff frame.
+## Notes-deDE: Benutze << /sdb >> um das Debuff-Fenster zu öffnen
+## Notes-frFR: Use << /sdb >> for debuff menu.
+## eMail: aeldra@sonnenkinder.org
+## URL: http://magnanimous-majesty.de
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## OptionalDeps: Titan, FuBar
+## SavedVariablesPerCharacter: SMARTDEBUFF_Options
+
+UTF8\utf8data.lua
+UTF8\utf8.lua
+SmartDebuff.xml

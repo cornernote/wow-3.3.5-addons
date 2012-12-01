@@ -1,0 +1,5 @@
+<Bindings>
+  <Binding name="SMARTDEBUFF_BIND_OPTIONS" header="SMARTDEBUFF">
+    SMARTDEBUFF_ToggleOF();
+  </Binding>
+</Bindings>
