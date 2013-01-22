@@ -1,0 +1,8 @@
+﻿## Interface: 30300
+
+## Title: |cFFFF8080FixItemIcon|r
+## Version: 3.3.5a
+## Notes: FixItemIcon
+## Notes-enUS: 
+FixItemIcon.lua
+FixDruidCharacterSheet.lua

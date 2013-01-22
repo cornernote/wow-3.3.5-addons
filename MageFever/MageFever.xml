@@ -1,0 +1,1916 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+ http://wowprogramming.com/FrameXML/UI.xsd">
+
+	<Script file="MageFever.lua"/>
+	<Script file="MageFeverOptions.lua"/>
+	<Script file="MageFeverProcs.lua"/>
+	<Script file="MageFeverLBTracker.lua"/>
+	<Script file="MageFeverMirrorImage.lua"/>
+	<Script file="MageFeverTTW.lua"/>
+	<Script file="MageFeverSpellSteal.lua"/>
+	<Script file="MageFeverIgniteWatch.lua"/>
+	<Script file="MageFeverFMTracker.lua"/>
+	<Script file="MageFeverInit.lua"/>
+
+	<Button name="BGBomberTemplate" virtual="true" movable="true" inherits="SecureActionButtonTemplate">
+		<Size>
+			<AbsDimension x="20" y ="20"/>
+		</Size>
+		<Layers>
+			<Layer level ="OVERLAY">
+				<FontString name ="$parentText" inherits ="GameFontNormal">
+					<Anchors>
+						<Anchor point ="TOPLEFT"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnUpdate>
+				BGBbutton_OnUpdate(self, elapsed)
+			</OnUpdate>
+		</Scripts>
+	</Button>
+
+	<Frame name="MageFeverOptions_Frame" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="UIParent">
+		<Size x="456" y="375" />
+		<Anchors>
+			<Anchor point="CENTER">
+				<Offset x="260" y="-80" />
+			</Anchor>
+		</Anchors>
+		<Backdrop
+				bgFile="Interface\ChatFrame\ChatFrameBackground"
+				edgeFile="Interface\DialogFrame\UI-DialogBox-Border"
+				tile="false">
+			<BackgroundInsets>
+				<AbsInset left="4" right="4" top="4" bottom="4"/>
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32"/>
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32"/>
+			</EdgeSize>
+			<Color r="0" g="0" b="0" a="1" />
+		</Backdrop>
+		<Frames>
+			<Frame name="$MageFeverTitle" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="MageFeverOptions_Frame">
+				<Size x="127" y="20" />
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="10" y="-15" />
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="$parentLabel" text="Mage Fever" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="TOPLEFT">
+									<Offset x="0" y="0" />
+								</Anchor>
+								<Anchor point="BOTTOMRIGHT">
+									<Offset x="0" y="0" />
+								</Anchor>
+							</Anchors>
+							<FontHeight val="15" />
+							<Color r="1" g="0.8196079" b="0" a="1" />
+						</FontString>
+					</Layer>
+				</Layers>
+
+			</Frame>
+			<Frame name="myTabPage1" parent="MageFeverOptions_Frame" hidden="false">
+				<Size x="450" y="330" />
+				<Anchors>
+					<Anchor point="BOTTOM">
+						<Offset>
+							<AbsDimension x="3" y="20" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="" text="General Procs" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="TOPLEFT">
+									<Offset x="0" y="0" />
+								</Anchor>
+								<Anchor point="BOTTOMRIGHT">
+									<Offset x="0" y="0" />
+								</Anchor>
+							</Anchors>
+							<FontHeight val="10" />
+							<Color r="0" g="0" b="0" a="1" />
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<Frame name="MageFeverScrollBack" parent="myTabPage1">
+						<Size x="143" y="267" />
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset x="15" y="-60" />
+							</Anchor>
+						</Anchors>
+						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" bgFile="Interface\Tooltips\UI-Tooltip-Background" tile="true">
+							<TileSize val="16" />
+							<BackgroundInsets left="5" right="5" top="5" bottom="5" />
+							<EdgeSize val="16" />
+							<Color r="0" g="0" b="0" a="1" />
+							<BorderColor r="1" g="1" b="1" a=".7" />
+						</Backdrop>
+					</Frame>
+					<Frame name="MageFeverProcInfo" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="myTabPage1">
+						<Size x="276" y="295" />
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset x="165" y="-31" />
+							</Anchor>
+						</Anchors>
+						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" bgFile="Interface\Tooltips\UI-Tooltip-Background" tile="true">
+							<TileSize val="16" />
+							<BackgroundInsets left="5" right="5" top="5" bottom="5" />
+							<EdgeSize val="16" />
+							<Color r="0" g="0" b="0" a="0" />
+							<BorderColor r="1" g="1" b="1" a=".7" />
+						</Backdrop>
+						<Layers>
+							<Layer level="OVERLAY">
+								<FontString name="SelectedProcLabel" text=" " font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+									<Anchors>
+										<Anchor point="TOP">
+											<Offset x="0" y="-5" />
+										</Anchor>
+										<Anchor point="CENTER">
+											<Offset x="0" y="0" />
+										</Anchor>
+									</Anchors>
+									<FontHeight val="12" />
+									<Color r="1" g="0" b="0" a="1" />
+								</FontString>
+							</Layer>
+						</Layers>
+						<Frames>
+							<Frame name="MageFeverFrame1" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="MageFeverProcInfo">
+								<Size>
+									<AbsDimension x="173" y="54" />
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset x="15" y="-25" />
+									</Anchor>
+								</Anchors>
+								<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" bgFile="Interface\DialogFrame\UI-DialogBox-Background" tile="true">
+									<TileSize>
+										<AbsValue val="8" />
+									</TileSize>
+									<BackgroundInsets>
+										<AbsInset left="4" right="4" top="4" bottom="4" />
+									</BackgroundInsets>
+									<EdgeSize>
+										<AbsValue val="8" />
+									</EdgeSize>
+									<Color r="0" g="0" b="0" a="0" />
+									<BorderColor r="1" g="1" b="1" a="0" />
+								</Backdrop>
+								<Layers>
+									<Layer level="OVERLAY">
+										<FontString name="FontString1" inherits="GameFontNormal" text="Target">
+											<Size>
+												<AbsDimension x="80" y="20" />
+											</Size>
+											<Anchors>
+												<Anchor point="TOPLEFT">
+													<Offset x="42" y="0" />
+												</Anchor>
+											</Anchors>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Frames>
+									<CheckButton name="MageFeverUnitTarget" parent="MageFeverFrame1" enableMouse="true">
+										<Size x="32" y="32" />
+										<Anchors>
+											<Anchor point="TOPLEFT">
+												<Offset x="79" y="-20" />
+											</Anchor>
+										</Anchors>
+										<Layers>
+											<Layer level="OVERLAY">
+												<FontString name="$parentText" text="Target" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+													<Anchors>
+														<Anchor point="LEFT">
+															<Offset x="32" y="0" />
+														</Anchor>
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="0.8196079" b="0" a="1" />
+												</FontString>
+											</Layer>
+										</Layers>
+										<Scripts>
+											<OnClick>MageFever_ToggleUnitTarget(self);</OnClick>
+										</Scripts>
+										<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+										<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+										<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+										<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+										<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+									</CheckButton>
+									<CheckButton name="MageFeverUnitMe" parent="MageFeverFrame1" enableMouse="true">
+										<Size x="32" y="32" />
+										<Anchors>
+											<Anchor point="TOPLEFT">
+												<Offset x="8" y="-20" />
+											</Anchor>
+										</Anchors>
+										<Layers>
+											<Layer level="OVERLAY">
+												<FontString name="$parentText" text="Me" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+													<Anchors>
+														<Anchor point="LEFT">
+															<Offset x="32" y="0" />
+														</Anchor>
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="0.8196079" b="0" a="1" />
+												</FontString>
+											</Layer>
+										</Layers>
+										<Scripts>
+											<OnClick>MageFever_ToggleUnitMe(self);</OnClick>
+										</Scripts>
+										<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+										<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+										<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+										<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+										<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+									</CheckButton>
+								</Frames>
+							</Frame>
+							<Frame name="MageFeverFrame2" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="MageFeverProcInfo">
+								<Size>
+									<AbsDimension x="173" y="54" />
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset x="15" y="-85" />
+									</Anchor>
+								</Anchors>
+								<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" bgFile="Interface\DialogFrame\UI-DialogBox-Background" tile="true">
+									<TileSize>
+										<AbsValue val="8" />
+									</TileSize>
+									<BackgroundInsets>
+										<AbsInset left="4" right="4" top="4" bottom="4" />
+									</BackgroundInsets>
+									<EdgeSize>
+										<AbsValue val="8" />
+									</EdgeSize>
+									<Color r="0" g="0" b="0" a="1" />
+									<BorderColor r="1" g="1" b="1" a="0" />
+								</Backdrop>
+								<Layers>
+									<Layer level="OVERLAY">
+										<FontString name="FontString1" inherits="GameFontNormal" text="Buff Type">
+											<Size>
+												<AbsDimension x="80" y="20" />
+											</Size>
+											<Anchors>
+												<Anchor point="TOPLEFT">
+													<Offset x="42" y="0" />
+												</Anchor>
+											</Anchors>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Frames>
+									<CheckButton name="MageFeverBuff" parent="MageFeverFrame2" enableMouse="true">
+										<Size x="32" y="32" />
+										<Anchors>
+											<Anchor point="TOPLEFT">
+												<Offset x="10" y="-20" />
+											</Anchor>
+										</Anchors>
+										<Layers>
+											<Layer level="OVERLAY">
+												<FontString name="$parentText" text="Buff" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+													<Anchors>
+														<Anchor point="LEFT">
+															<Offset x="32" y="0" />
+														</Anchor>
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="0.8196079" b="0" a="1" />
+												</FontString>
+											</Layer>
+										</Layers>
+										<Scripts>
+											<OnClick>MageFever_ToggleBuff(self);</OnClick>
+										</Scripts>
+										<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+										<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+										<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+										<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+										<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+									</CheckButton>
+									<CheckButton name="MageFeverDebuff" parent="MageFeverFrame2" enableMouse="true">
+										<Size x="32" y="32" />
+										<Anchors>
+											<Anchor point="TOPLEFT">
+												<Offset x="75" y="-20" />
+											</Anchor>
+										</Anchors>
+										<Layers>
+											<Layer level="OVERLAY">
+												<FontString name="$parentText" text="Debuff" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+													<Anchors>
+														<Anchor point="LEFT">
+															<Offset x="32" y="0" />
+														</Anchor>
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="0.8196079" b="0" a="1" />
+												</FontString>
+											</Layer>
+										</Layers>
+										<Scripts>
+											<OnClick>MageFever_ToggleDebuff(self);</OnClick>
+										</Scripts>
+										<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+										<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+										<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+										<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+										<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+									</CheckButton>
+								</Frames>
+							</Frame>
+							<Frame name="MageFeverScaleSliderFrame" parent="MageFeverProcInfo">
+								<Size x="206" y="50" />
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset x="30" y="-150" />
+									</Anchor>
+								</Anchors>
+								<Frames>
+									<Slider name="MageFeverScaleSlider" enableMouse="true" minValue=".4" maxValue="5" defaultValue="1" valueStep=".2" orientation="HORIZONTAL">
+										<Size x="128" y="17" />
+										<Anchors>
+											<Anchor point="LEFT" />
+											<Anchor point="RIGHT" />
+										</Anchors>
+										<Backdrop bgFile="Interface\Buttons\UI-SliderBar-Background" edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
+											<BackgroundInsets left="3" right="3" top="6" bottom="6" />
+											<TileSize val="8" />
+											<EdgeSize val="8" />
+										</Backdrop>
+										<Layers>
+											<Layer>
+												<FontString name="$parentTitle" font="Fonts\FRIZQT__.TTF" text="Scale">
+													<Anchors>
+														<Anchor point="BOTTOM" relativePoint="TOP" />
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="0.8196079" b="0" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset x="1" y="-1" />
+													</Shadow>
+												</FontString>
+												<FontString name="$parentLow" font="Fonts\FRIZQT__.TTF" text="Low">
+													<Anchors>
+														<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" />
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="1" b="1" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset x="1" y="-1" />
+													</Shadow>
+												</FontString>
+												<FontString name="$parentHigh" font="Fonts\FRIZQT__.TTF" text="High">
+													<Anchors>
+														<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" />
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="1" b="1" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset  x="1" y="-1" />
+													</Shadow>
+												</FontString>
+											</Layer>
+										</Layers>
+										<Scripts>
+											<OnValueChanged>
+												MageFever_Scale(self);
+											</OnValueChanged>
+										</Scripts>
+										<ThumbTexture name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
+											<Size>
+												<AbsDimension x="32" y="32" />
+											</Size>
+										</ThumbTexture>
+									</Slider>
+								</Frames>
+							</Frame>
+							<Frame name="MageFeverHeightSliderFrame" parent="MageFeverProcInfo">
+								<Size x="206" y="50" />
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset x="30" y="-190" />
+									</Anchor>
+								</Anchors>
+								<Frames>
+									<Slider name="MageFeverHeightSlider" enableMouse="true" minValue="20" maxValue="400" defaultValue="120" valueStep="1" orientation="HORIZONTAL">
+										<Size x="128" y="17" />
+										<Anchors>
+											<Anchor point="LEFT"/>
+											<Anchor point="RIGHT"/>
+										</Anchors>
+										<Backdrop  bgFile="Interface\Buttons\UI-SliderBar-Background" edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
+											<TileSize val="8" />
+											<BackgroundInsets left="3" right="3" top="6" bottom="6" />
+											<EdgeSize val="8" />
+										</Backdrop>
+										<Layers>
+											<Layer>
+												<FontString name="$parentTitle" font="Fonts\FRIZQT__.TTF" text="Height">
+													<Anchors>
+														<Anchor point="BOTTOM" relativePoint="TOP" />
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="0.8196079" b="0" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset x="1" y="-1" />
+													</Shadow>
+												</FontString>
+												<FontString name="$parentLow" font="Fonts\FRIZQT__.TTF" text="Low">
+													<Anchors>
+														<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" />
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="1" b="1" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset x="1" y="-1" />
+													</Shadow>
+												</FontString>
+												<FontString name="$parentHigh" font="Fonts\FRIZQT__.TTF" text="High">
+													<Anchors>
+														<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" />
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="1" b="1" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset  x="1" y="-1" />
+													</Shadow>
+												</FontString>
+											</Layer>
+										</Layers>
+										<Scripts>
+											<OnValueChanged>
+												MageFever_Height(self);
+											</OnValueChanged>
+										</Scripts>
+										<ThumbTexture name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
+											<Size>
+												<AbsDimension x="32" y="32" />
+											</Size>
+										</ThumbTexture>
+									</Slider>
+								</Frames>
+							</Frame>
+							<Frame name="MageFeverWidthSliderFrame" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="MageFeverProcInfo">
+								<Size x="206" y="50" />
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset x="30" y="-230" />
+									</Anchor>
+								</Anchors>
+								<Frames>
+									<Slider name="MageFeverWidthSlider" enableMouse="true" drawLayer="OVERLAY" minValue="20" maxValue="400" defaultValue="120" valueStep="1" orientation="HORIZONTAL">
+										<Size x="128" y="17" />
+										<Anchors>
+											<Anchor point="LEFT">
+												<Offset x="0" y="0" />
+											</Anchor>
+											<Anchor point="RIGHT">
+												<Offset x="0" y="0" />
+											</Anchor>
+										</Anchors>
+										<Backdrop edgeFile="Interface\Buttons\UI-SliderBar-Border" bgFile="Interface\Buttons\UI-SliderBar-Background" tile="true">
+											<TileSize val="8" />
+											<BackgroundInsets left="3" right="3" top="6" bottom="6" />
+											<EdgeSize val="8" />
+										</Backdrop>
+										<Layers>
+											<Layer>
+												<FontString name="$parentTitle" font="Fonts\FRIZQT__.TTF" text="Width">
+													<Anchors>
+														<Anchor point="BOTTOM" relativePoint="TOP" />
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="0.8196079" b="0" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset x="1" y="-1" />
+													</Shadow>
+												</FontString>
+												<FontString name="$parentLow" font="Fonts\FRIZQT__.TTF" text="Low">
+													<Anchors>
+														<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" />
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="1" b="1" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset x="1" y="-1" />
+													</Shadow>
+												</FontString>
+												<FontString name="$parentHigh" font="Fonts\FRIZQT__.TTF" text="High">
+													<Anchors>
+														<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" />
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="1" b="1" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset  x="1" y="-1" />
+													</Shadow>
+												</FontString>
+											</Layer>
+										</Layers>
+										<Scripts>
+											<OnValueChanged>
+												MageFever_Width(self);
+											</OnValueChanged>
+										</Scripts>
+										<ThumbTexture name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
+											<Size>
+												<AbsDimension x="32" y="32" />
+											</Size>
+										</ThumbTexture>
+									</Slider>
+								</Frames>
+							</Frame>
+							<CheckButton name="MageFeverProcShow" parent="MageFeverProcInfo" enableMouse="true">
+								<Size x="24" y="24" />
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset x="190" y="-20" />
+									</Anchor>
+								</Anchors>
+								<Layers>
+									<Layer level="OVERLAY">
+										<FontString name="$parentText" text="Show" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<Anchors>
+												<Anchor point="LEFT">
+													<Offset x="32" y="0" />
+												</Anchor>
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="0.8196079" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnClick>MageFever_ToggleProcShow(self);</OnClick>
+								</Scripts>
+								<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+								<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+								<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+								<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+								<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+							</CheckButton>
+							<CheckButton name="MageFeverProcTimer" parent="MageFeverProcInfo" enableMouse="true">
+								<Size x="24" y="24" />
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo ="MageFeverProcShow" relativePoint ="BOTTOMLEFT">
+										<Offset x="0" y="3" />
+									</Anchor>
+								</Anchors>
+								<Layers>
+									<Layer level="OVERLAY">
+										<FontString name="$parentText" text="Timer" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<Anchors>
+												<Anchor point="LEFT">
+													<Offset x="32" y="0" />
+												</Anchor>
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="0.8196079" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnClick>MageFever_ToggleProcTimer(self);</OnClick>
+								</Scripts>
+								<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+								<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+								<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+								<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+								<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+							</CheckButton>
+							<CheckButton name="MageFeverProcCount" parent="MageFeverProcInfo" enableMouse="true">
+								<Size x="24" y="24" />
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo ="MageFeverProcTimer" relativePoint ="BOTTOMLEFT">
+										<Offset x="0" y="3" />
+									</Anchor>
+								</Anchors>
+								<Layers>
+									<Layer level="OVERLAY">
+										<FontString name="$parentText" text="Count" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<Anchors>
+												<Anchor point="LEFT">
+													<Offset x="32" y="0" />
+												</Anchor>
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="0.8196079" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnClick>MageFever_ToggleProcCount(self);</OnClick>
+								</Scripts>
+								<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+								<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+								<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+								<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+								<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+							</CheckButton>
+							<CheckButton name="MageFeverProcMine" parent="MageFeverProcInfo" enableMouse="true">
+								<Size x="24" y="24" />
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo ="MageFeverProcCount" relativePoint ="BOTTOMLEFT">
+										<Offset x="0" y="3" />
+									</Anchor>
+								</Anchors>
+								<Layers>
+									<Layer level="OVERLAY">
+										<FontString name="$parentText" text="Mine" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<Anchors>
+												<Anchor point="LEFT">
+													<Offset x="32" y="0" />
+												</Anchor>
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="0.8196079" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnClick>MageFever_ToggleProcMine(self);</OnClick>
+								</Scripts>
+								<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+								<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+								<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+								<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+								<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+							</CheckButton>
+							<CheckButton name="MageFeverProcIcon" parent="MageFeverProcInfo" enableMouse="true">
+								<Size x="24" y="24" />
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo ="MageFeverProcMine" relativePoint ="BOTTOMLEFT">
+										<Offset x="0" y="3" />
+									</Anchor>
+								</Anchors>
+								<Layers>
+									<Layer level="OVERLAY">
+										<FontString name="$parentText" text="Icon" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<Anchors>
+												<Anchor point="LEFT">
+													<Offset x="32" y="0" />
+												</Anchor>
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="0.8196079" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnClick>MageFever_ToggleProcIcon(self);</OnClick>
+								</Scripts>
+								<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+								<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+								<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+								<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+								<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+							</CheckButton>
+							<Frame name="MageFeverProcColor" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="MageFeverProcInfo">
+								<Size>
+									<AbsDimension x="18" y="18" />
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo ="MageFeverProcIcon" relativePoint ="BOTTOMLEFT">
+										<Offset x="3" y="0" />
+									</Anchor>
+								</Anchors>
+								<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" bgFile="Interface\Tooltips\UI-Tooltip-Background" tile="false">
+									<TileSize>
+										<AbsValue val="8" />
+									</TileSize>
+									<BackgroundInsets>
+										<AbsInset left="2" right="2" top="2" bottom="2" />
+									</BackgroundInsets>
+									<EdgeSize>
+										<AbsValue val="8" />
+									</EdgeSize>
+									<Color r="0" g="0" b="0" a="1" />
+									<BorderColor r="1" g="1" b="1" a="1" />
+								</Backdrop>
+								<Layers>
+									<Layer level="OVERLAY">
+										<FontString name="ProcColorLabel" text="Color" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<Anchors>
+												<Anchor point="TOPLEFT">
+													<Offset x="25" y="-5" />
+												</Anchor>
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="0.8196079" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnMouseUp>
+										MageFeverSelectColor(self);
+									</OnMouseUp>
+								</Scripts>
+							</Frame>
+						</Frames>
+					</Frame>
+					<ScrollFrame name="MageFeverProcScroller" inherits="UIPanelScrollFrameTemplate" parent="myTabPage1">
+						<Size x="115" y="259" />
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset x="17" y="-64" />
+							</Anchor>
+						</Anchors>
+						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" bgFile="Interface\TabardFrame\TabardFrameBackground" tile="false">
+							<TileSize val="16" />
+							<BackgroundInsets>
+								<AbsInset left="0" right="0" top="4" bottom="4" />
+							</BackgroundInsets>
+							<EdgeSize val="16" />
+							<Color r="0" g="0" b="0" a="1" />
+							<BorderColor r="1" g="0.8196079" b="0" a="0" />
+						</Backdrop>
+						<ScrollChild>
+							<Frame name="MFProcScrollerChildFrame">
+								<Size>
+									<AbsDimension x="115" y="400" />
+								</Size>
+							</Frame>
+						</ScrollChild>
+					</ScrollFrame>
+				</Frames>
+			</Frame>
+			<Frame name="myTabPage2" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="MageFeverOptions_Frame" hidden="true">
+				<Size x="450" y="330" />
+				<Anchors>
+					<Anchor point="BOTTOM">
+						<Offset>
+							<AbsDimension x="3" y="15" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="" text="Special Procs" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="TOPLEFT">
+									<Offset>
+										<AbsDimension x="20" y="-30" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<FontHeight val="10" />
+							<Color r="0" g="0" b="0" a="1" />
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<Frame name="MageFeverLBTrackerFame" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="myTabPage2">
+						<Size>
+							<AbsDimension x="195" y="109" />
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="245" y="-210" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" bgFile="Interface\Tooltips\UI-Tooltip-Background" tile="true">
+							<TileSize>
+								<AbsValue val="16" />
+							</TileSize>
+							<BackgroundInsets>
+								<AbsInset left="5" right="5" top="5" bottom="5" />
+							</BackgroundInsets>
+							<EdgeSize>
+								<AbsValue val="16" />
+							</EdgeSize>
+							<Color r="0" g="0" b="0" a="1" />
+							<BorderColor r="1" g="1" b="1" a=".7" />
+						</Backdrop>
+						<Frames>
+							<Frame name="LivingBombTrackerScale" parent="MageFeverLBTrackerFame">
+								<Size>
+									<AbsDimension x="185" y="50" />
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset>
+											<AbsDimension x="5" y="-55" />
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Frames>
+									<Slider name="MageFeverLBTrackerScale" enableMouse="true" minValue=".4" maxValue="5" defaultValue="1" valueStep=".2" orientation="HORIZONTAL">
+										<Size x="128" y="17" />
+										<Anchors>
+											<Anchor point="LEFT" />
+											<Anchor point="RIGHT" />
+										</Anchors>
+										<Backdrop bgFile="Interface\Buttons\UI-SliderBar-Background" edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
+											<BackgroundInsets left="3" right="3" top="6" bottom="6" />
+											<TileSize val="8" />
+											<EdgeSize val="8" />
+										</Backdrop>
+										<Layers>
+											<Layer>
+												<FontString name="$parentTitle" font="Fonts\FRIZQT__.TTF" text="Scale">
+													<Anchors>
+														<Anchor point="BOTTOM" relativePoint="TOP" />
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="0.8196079" b="0" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset x="1" y="-1" />
+													</Shadow>
+												</FontString>
+												<FontString name="$parentLow" font="Fonts\FRIZQT__.TTF" text="Low">
+													<Anchors>
+														<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" />
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="1" b="1" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset x="1" y="-1" />
+													</Shadow>
+												</FontString>
+												<FontString name="$parentHigh" font="Fonts\FRIZQT__.TTF" text="High">
+													<Anchors>
+														<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" />
+													</Anchors>
+													<FontHeight val="10" />
+													<Color r="1" g="1" b="1" />
+													<Shadow>
+														<Color r="0" g="0" b="0" />
+														<Offset  x="1" y="-1" />
+													</Shadow>
+												</FontString>
+											</Layer>
+										</Layers>
+										<Scripts>
+											<OnValueChanged>
+												MageFever_LBTrackerScale(self);
+											</OnValueChanged>
+											<OnShow>self:SetValue(MageFever3_Options.LBTrackerScale)</OnShow>
+										</Scripts>
+										<ThumbTexture name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
+											<Size>
+												<AbsDimension x="32" y="32" />
+											</Size>
+										</ThumbTexture>
+									</Slider>
+								</Frames>
+							</Frame>
+							<Frame name="$parentLabel3" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="MageFeverLBTrackerFame">
+								<Size>
+									<AbsDimension x="128" y="17" />
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset>
+											<AbsDimension x="35" y="-5" />
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Layers>
+									<Layer level="OVERLAY">
+										<FontString name="$parentLabel" text="Living Bomb Tracker" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<FontHeight>
+												<AbsValue val="11" />
+											</FontHeight>
+											<Color r="1" g="0.8196079" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+							</Frame>
+							<CheckButton name="MageFeverOptions_FrameLBTrackerShow" parent="MageFeverLBTrackerFame" enableMouse="true">
+								<Size>
+									<AbsDimension x="32" y="32" />
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset>
+											<AbsDimension x="5" y="-30" />
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Layers>
+									<Layer level="OVERLAY">
+										<FontString name="$parentText" text="Show" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<Anchors>
+												<Anchor point="LEFT">
+													<Offset>
+														<AbsDimension x="32" y="0" />
+													</Offset>
+												</Anchor>
+											</Anchors>
+											<FontHeight>
+												<AbsValue val="10" />
+											</FontHeight>
+											<Color r="1" g="0.8196079" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnClick>MageFever_ToggleLBTracker(self);</OnClick>
+									<OnShow>self:SetChecked(MageFever3_Options.LBTrackerShowing)</OnShow>
+								</Scripts>
+								<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+								<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+								<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+								<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+								<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+							</CheckButton>
+							<CheckButton name="MageFeverOptions_FrameLBGrowUp" parent="MageFeverLBTrackerFame" enableMouse="true">
+								<Size>
+									<AbsDimension x="32" y="32" />
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset>
+											<AbsDimension x="95" y="-30" />
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Layers>
+									<Layer level="OVERLAY">
+										<FontString name="$parentText" text="Grow Up" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<Anchors>
+												<Anchor point="LEFT">
+													<Offset>
+														<AbsDimension x="32" y="0" />
+													</Offset>
+												</Anchor>
+											</Anchors>
+											<FontHeight>
+												<AbsValue val="10" />
+											</FontHeight>
+											<Color r="1" g="0.8196079" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnClick>MageFever_ToggleLBGrowUp(self);</OnClick>
+									<OnShow>self:SetChecked(MageFever3_Options.LBTrackerShowing)</OnShow>
+								</Scripts>
+								<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+								<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+								<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+								<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+								<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+							</CheckButton>
+						</Frames>
+					</Frame>
+					<Frame name="MageFeverMIConfig" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="myTabPage2">
+						<Size x="195" y="190" />
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset x="245" y="-15" />
+							</Anchor>
+						</Anchors>
+						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" bgFile="Interface\Tooltips\UI-Tooltip-Background" tile="false">
+							<TileSize val="16" />
+							<BackgroundInsets left="4" right="4" top="4" bottom="4" />
+							<EdgeSize val="16" />
+							<Color r="0" g="0" b="0" a="1" />
+							<BorderColor r="1" g="1" b="1" a=".7" />
+						</Backdrop>
+						<Frames>
+							<Frame name="$parentLabel3" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="MageFeverMIConfig">
+								<Size>
+									<AbsDimension x="128" y="17" />
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset>
+											<AbsDimension x="35" y="-5" />
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Layers>
+									<Layer level="OVERLAY">
+										<FontString name="$parentLabel" text="Mirror Image" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<FontHeight>
+												<AbsValue val="11" />
+											</FontHeight>
+											<Color r="1" g="0.8196079" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+							</Frame>
+							<CheckButton name="MageFeverMIShow" parent="MageFeverMIConfig" enableMouse="true">
+								<Size x="32" y="32" />
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset x="20" y="-25" />
+									</Anchor>
+								</Anchors>
+								<Layers>
+									<Layer>
+										<FontString name="MIshowlabel" text="Show" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<Anchors>
+												<Anchor point="LEFT">
+													<Offset x="32" y="0" />
+												</Anchor>
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="1" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnClick>MageFever_ToggleMI(self)</OnClick>
+									<OnShow>self:SetChecked(MageFeverMI_Options["Show"])</OnShow>
+								</Scripts>
+								<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+								<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+								<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+								<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+								<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+							</CheckButton>
+							<Slider name="MIheightSlider" parent="MageFeverMIConfig" enableMouse="true" drawLayer="OVERLAY" minValue="20" maxValue="600" defaultValue="12" valueStep="1" orientation="HORIZONTAL">
+								<Size x="155" y="15" />
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset x="20" y="-65" />
+									</Anchor>
+								</Anchors>
+								<Backdrop bgFile="Interface\Buttons\UI-SliderBar-Background" edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
+									<BackgroundInsets left="3" right="3" top="6" bottom="6" />
+									<TileSize val="8" />
+									<EdgeSize val="8" />
+								</Backdrop>
+								<Layers>
+									<Layer>
+										<FontString name="$parentTitle" font="Fonts\FRIZQT__.TTF" text="Height">
+											<Anchors>
+												<Anchor point="BOTTOM" relativePoint="TOP" />
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="0.8196079" b="0" />
+											<Shadow>
+												<Color r="0" g="0" b="0" />
+												<Offset x="1" y="-1" />
+											</Shadow>
+										</FontString>
+										<FontString name="$parentLow" font="Fonts\FRIZQT__.TTF" text="Low">
+											<Anchors>
+												<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" />
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="1" b="1" />
+											<Shadow>
+												<Color r="0" g="0" b="0" />
+												<Offset x="1" y="-1" />
+											</Shadow>
+										</FontString>
+										<FontString name="$parentHigh" font="Fonts\FRIZQT__.TTF" text="High">
+											<Anchors>
+												<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" />
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="1" b="1" />
+											<Shadow>
+												<Color r="0" g="0" b="0" />
+												<Offset  x="1" y="-1" />
+											</Shadow>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnValueChanged>MageFeverMIHeight(self)</OnValueChanged>
+									<OnShow>self:SetValue(MageFeverMI_Options["Height"])</OnShow>
+								</Scripts>
+								<ThumbTexture name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
+									<Size>
+										<AbsDimension x="32" y="32" />
+									</Size>
+								</ThumbTexture>
+							</Slider>
+							<Slider name="MIwidthSlider" parent="MageFeverMIConfig" enableMouse="true" drawLayer="OVERLAY" minValue="20" maxValue="400" defaultValue="120" valueStep="1" orientation="HORIZONTAL">
+								<Size x="155" y="15" />
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset x="20" y="-110" />
+									</Anchor>
+								</Anchors>
+								<Backdrop bgFile="Interface\Buttons\UI-SliderBar-Background" edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
+									<BackgroundInsets left="3" right="3" top="6" bottom="6" />
+									<TileSize val="8" />
+									<EdgeSize val="8" />
+								</Backdrop>
+								<Layers>
+									<Layer>
+										<FontString name="$parentTitle" font="Fonts\FRIZQT__.TTF" text="Width">
+											<Anchors>
+												<Anchor point="BOTTOM" relativePoint="TOP" />
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="0.8196079" b="0" />
+											<Shadow>
+												<Color r="0" g="0" b="0" />
+												<Offset x="1" y="-1" />
+											</Shadow>
+										</FontString>
+										<FontString name="$parentLow" font="Fonts\FRIZQT__.TTF" text="Low">
+											<Anchors>
+												<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" />
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="1" b="1" />
+											<Shadow>
+												<Color r="0" g="0" b="0" />
+												<Offset x="1" y="-1" />
+											</Shadow>
+										</FontString>
+										<FontString name="$parentHigh" font="Fonts\FRIZQT__.TTF" text="High">
+											<Anchors>
+												<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" />
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="1" b="1" />
+											<Shadow>
+												<Color r="0" g="0" b="0" />
+												<Offset  x="1" y="-1" />
+											</Shadow>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnValueChanged>MageFeverMIWidth(self)</OnValueChanged>
+									<OnShow>self:SetValue(MageFeverMI_Options["Width"])</OnShow>
+								</Scripts>
+								<ThumbTexture name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
+									<Size>
+										<AbsDimension x="32" y="32" />
+									</Size>
+								</ThumbTexture>
+							</Slider>
+							<Slider name="MIscaleSlider" parent="MageFeverMIConfig" enableMouse="true" drawLayer="OVERLAY" minValue=".4" maxValue="5" defaultValue="1" valueStep=".2" orientation="HORIZONTAL">
+								<Size x="155" y="15" />
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset x="20" y="-155" />
+									</Anchor>
+								</Anchors>
+								<Backdrop bgFile="Interface\Buttons\UI-SliderBar-Background" edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
+									<BackgroundInsets left="3" right="3" top="6" bottom="6" />
+									<TileSize val="8" />
+									<EdgeSize val="8" />
+								</Backdrop>
+								<Layers>
+									<Layer>
+										<FontString name="$parentTitle" font="Fonts\FRIZQT__.TTF" text="Scale">
+											<Anchors>
+												<Anchor point="BOTTOM" relativePoint="TOP" />
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="0.8196079" b="0" />
+											<Shadow>
+												<Color r="0" g="0" b="0" />
+												<Offset x="1" y="-1" />
+											</Shadow>
+										</FontString>
+										<FontString name="$parentLow" font="Fonts\FRIZQT__.TTF" text="Low">
+											<Anchors>
+												<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" />
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="1" b="1" />
+											<Shadow>
+												<Color r="0" g="0" b="0" />
+												<Offset x="1" y="-1" />
+											</Shadow>
+										</FontString>
+										<FontString name="$parentHigh" font="Fonts\FRIZQT__.TTF" text="High">
+											<Anchors>
+												<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" />
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="1" b="1" />
+											<Shadow>
+												<Color r="0" g="0" b="0" />
+												<Offset  x="1" y="-1" />
+											</Shadow>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnValueChanged>MageFeverMIScale(self)</OnValueChanged>
+									<OnShow>self:SetValue(MageFeverMI_Options["Scale"])</OnShow>
+								</Scripts>
+								<ThumbTexture name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
+									<Size>
+										<AbsDimension x="32" y="32" />
+									</Size>
+								</ThumbTexture>
+							</Slider>
+						</Frames>
+					</Frame>
+					<Frame name="MageFeverTTWConfig" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="myTabPage2">
+						<Size x="230" y="305" />
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset x="10" y="-15" />
+							</Anchor>
+						</Anchors>
+						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" bgFile="Interface\Tooltips\UI-Tooltip-Background" tile="false">
+							<TileSize val="16" />
+							<BackgroundInsets left="4" right="4" top="4" bottom="4" />
+							<EdgeSize val="16" />
+							<Color r="0" g="0" b="0" a="1" />
+							<BorderColor r="1" g="1" b="1" a=".7" />
+						</Backdrop>
+						<Layers>
+							<Layer level="OVERLAY">
+								<FontString name="$parentLabel" text="*Spells used to detect MF.TTW" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+									<Anchors>
+										<Anchor point="TOPLEFT">
+											<Offset x="25" y="-215" />
+										</Anchor>
+									</Anchors>
+									<FontHeight val="8" />
+									<Color r="1" g="0.8196079" b="0" a="1" />
+								</FontString>
+							</Layer>
+						</Layers>
+						<Frames>
+							<Frame name="$parentLabel3" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="MageFeverTTWConfig">
+								<Size>
+									<AbsDimension x="128" y="17" />
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset>
+											<AbsDimension x="50" y="0" />
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Layers>
+									<Layer level="OVERLAY">
+										<FontString name="$parentLabel" text="Torment the Weak" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<FontHeight>
+												<AbsValue val="11" />
+											</FontHeight>
+											<Color r="1" g="0.8196079" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+							</Frame>
+							<Frame name="MageFeverTTWScroll" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="MageFeverTTWConfig">
+								<Size x="200" y="175" />
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset x="15" y="-40" />
+									</Anchor>
+								</Anchors>
+								<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" bgFile="Interface\Tooltips\UI-Tooltip-Background" tile="true">
+									<TileSize val="16" />
+									<BackgroundInsets left="5" right="5" top="5" bottom="5" />
+									<EdgeSize val="16" />
+									<Color r="0" g="0" b="0" a="1" />
+									<BorderColor r="1" g="1" b="1" a=".7" />
+								</Backdrop>
+								<Frames>
+									<ScrollFrame name="MageFeverTTWScroller" inherits="UIPanelScrollFrameTemplate" parent="MageFeverTTWScroll">
+										<Size x="170" y="165" />
+										<Anchors>
+											<Anchor point="TOPLEFT">
+												<Offset x="5" y="-5" />
+											</Anchor>
+										</Anchors>
+										<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" bgFile="Interface\TabardFrame\TabardFrameBackground" tile="false">
+											<TileSize val="16" />
+											<BackgroundInsets>
+												<AbsInset left="0" right="0" top="4" bottom="4" />
+											</BackgroundInsets>
+											<EdgeSize val="16" />
+											<Color r="0" g="0" b="0" a="1" />
+											<BorderColor r="1" g="0.8196079" b="0" a="0" />
+										</Backdrop>
+										<ScrollChild>
+											<Frame name="TTWScrollerChildFrame">
+												<Size>
+													<AbsDimension x="116" y="400" />
+												</Size>
+											</Frame>
+										</ScrollChild>
+									</ScrollFrame>
+								</Frames>
+							</Frame>
+							<CheckButton name="MageFeverTTWShow" parent="MageFeverTTWConfig" enableMouse="true">
+								<Size x="32" y="32" />
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset x="75" y="-225" />
+									</Anchor>
+								</Anchors>
+								<Layers>
+									<Layer>
+										<FontString name="Text" text="Show" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<Anchors>
+												<Anchor point="LEFT">
+													<Offset x="32" y="0" />
+												</Anchor>
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="1" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnClick>MageFever_ToggleTTW(self)</OnClick>
+									<OnShow>self:SetChecked(MageFeverTTW_Options["Show"])</OnShow>
+								</Scripts>
+								<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+								<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+								<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+								<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+								<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+							</CheckButton>
+							<Slider name="TTWScaleSlider" parent="MageFeverTTWConfig" enableMouse="true" drawLayer="OVERLAY" minValue=".4" maxValue="5" defaultValue="1" valueStep=".2" orientation="HORIZONTAL">
+								<Size x="180" y="15" />
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset x="25" y="-265" />
+									</Anchor>
+								</Anchors>
+								<Backdrop bgFile="Interface\Buttons\UI-SliderBar-Background" edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
+									<BackgroundInsets left="3" right="3" top="6" bottom="6" />
+									<TileSize val="8" />
+									<EdgeSize val="8" />
+								</Backdrop>
+								<Layers>
+									<Layer>
+										<FontString name="$parentTitle" font="Fonts\FRIZQT__.TTF" text="Scale">
+											<Anchors>
+												<Anchor point="BOTTOM" relativePoint="TOP" />
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="0.8196079" b="0" />
+											<Shadow>
+												<Color r="0" g="0" b="0" />
+												<Offset x="1" y="-1" />
+											</Shadow>
+										</FontString>
+										<FontString name="$parentLow" font="Fonts\FRIZQT__.TTF" text="Low">
+											<Anchors>
+												<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" />
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="1" b="1" />
+											<Shadow>
+												<Color r="0" g="0" b="0" />
+												<Offset x="1" y="-1" />
+											</Shadow>
+										</FontString>
+										<FontString name="$parentHigh" font="Fonts\FRIZQT__.TTF" text="High">
+											<Anchors>
+												<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" />
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="1" b="1" />
+											<Shadow>
+												<Color r="0" g="0" b="0" />
+												<Offset  x="1" y="-1" />
+											</Shadow>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnValueChanged>MageFeverTTWScale(self)</OnValueChanged>
+									<OnShow>self:SetValue(MageFeverTTW_Options["Scale"])</OnShow>
+								</Scripts>
+								<ThumbTexture name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
+									<Size>
+										<AbsDimension x="32" y="32" />
+									</Size>
+								</ThumbTexture>
+							</Slider>
+						</Frames>
+					</Frame>
+				</Frames>
+			</Frame>
+			<Frame name="myTabPage3" parent="MageFeverOptions_Frame" hidden="false">
+				<Size x="450" y="330" />
+				<Anchors>
+					<Anchor point="BOTTOM">
+						<Offset>
+							<AbsDimension x="3" y="20" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="" text="Other" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="CENTER">
+									<Offset x="0" y="100" />
+								</Anchor>
+							</Anchors>
+							<FontHeight val="14" />
+							<Color r="1" g="1" b="0" a="1" />
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<Frame name="MageFeverSpellstealConfig" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="myTabPage3">
+						<Size x="276" y="295" />
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset x="20" y="-31" />
+							</Anchor>
+						</Anchors>
+						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" bgFile="Interface\Tooltips\UI-Tooltip-Background" tile="true">
+							<TileSize val="16" />
+							<BackgroundInsets left="5" right="5" top="5" bottom="5" />
+							<EdgeSize val="16" />
+							<Color r="0" g="0" b="0" a="0" />
+							<BorderColor r="1" g="1" b="1" a=".7" />
+						</Backdrop>
+						<Layers>
+							<Layer level="OVERLAY">
+								<FontString name="BGBomberText" text="Spellsteal Monitor" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+									<Anchors>
+										<Anchor point="TOP">
+											<Offset x="0" y="-5" />
+										</Anchor>
+										<Anchor point="CENTER">
+											<Offset x="0" y="0" />
+										</Anchor>
+									</Anchors>
+									<FontHeight val="12" />
+									<Color r="1" g=".8196079" b="0" a="1" />
+								</FontString>
+							</Layer>
+						</Layers>
+						<Frames>
+							<CheckButton name="MageFeverOptions_SSMonitorShow" parent="MageFeverSpellstealConfig" enableMouse="true">
+								<Size>
+									<AbsDimension x="32" y="32" />
+								</Size>
+								<Anchors>
+									<Anchor point="CENTER">
+										<Offset>
+											<AbsDimension x="-65" y="30" />
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Layers>
+									<Layer>
+										<FontString name="$parentText" text="Show" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<Anchors>
+												<Anchor point="LEFT" relativePoint="RIGHT">
+													<Offset>
+														<AbsDimension x="-2" y="0" />
+													</Offset>
+												</Anchor>
+											</Anchors>
+											<FontHeight>
+												<AbsValue val="10" />
+											</FontHeight>
+											<Color r="1" g="0.8196079" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnShow>self:SetChecked(MageFever3_Options.SSmonitorShowing)</OnShow>
+									<OnClick>MageFever_ToggleSSmonitor(self);</OnClick>
+								</Scripts>
+								<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+								<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+								<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+								<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+								<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+							</CheckButton>
+							<CheckButton name="MageFeverSSGrowUp" parent="MageFeverSpellstealConfig" enableMouse="true" text="Grow Up">
+								<Size x="32" y="32" />
+								<Anchors>
+									<Anchor point="CENTER">
+										<Offset x="35" y="30" />
+									</Anchor>
+								</Anchors>
+								<Layers>
+									<Layer>
+										<FontString name="Text" text="Grow Up" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<Anchors>
+												<Anchor point="LEFT">
+													<Offset x="32" y="0" />
+												</Anchor>
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g="1" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnShow>self:SetChecked(MageFever3_Options.SSGrowUp)</OnShow>
+									<OnClick>MageFever_ToggleSSGrowUp(self);</OnClick>
+								</Scripts>
+								<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+								<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+								<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+								<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+								<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+							</CheckButton>
+							<Slider name="MageFeverSSScale" parent="MageFeverSpellstealConfig" minValue=".4" maxValue="5" defaultValue="1" valueStep=".2" orientation="HORIZONTAL">
+								<Size x="165" y="15" />
+								<Anchors>
+									<Anchor point="CENTER">
+										<Offset x="0" y="-50" />
+									</Anchor>
+								</Anchors>
+								<Backdrop edgeFile="Interface\Buttons\UI-SliderBar-Border" bgFile="Interface\Buttons\UI-SliderBar-Background" tile="true">
+									<TileSize val="8" />
+									<BackgroundInsets left="3" right="3" top="6" bottom="6" />
+									<EdgeSize val="8" />
+								</Backdrop>
+								<Layers>
+									<Layer>
+										<FontString name="MageFeverSSConfigSlider1lblName" text="Scale" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<Anchors>
+												<Anchor point="BOTTOM" relativePoint="TOP"/>
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g=".8196079" b="0" a="1" />
+										</FontString>
+										<FontString name="MageFeverSSConfigSlider1lblLow" text="Low" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<Anchors>
+												<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g=".8196079" b="0" a="1" />
+										</FontString>
+										<FontString name="MageFeverSSConfigSlider1lblHigh" text="High" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+											<Anchors>
+												<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT"/>
+											</Anchors>
+											<FontHeight val="10" />
+											<Color r="1" g=".8196079" b="0" a="1" />
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnShow>self:SetValue(MageFever3_Options.SSScale)</OnShow>
+									<OnValueChanged>MageFeverScaleSS(self)</OnValueChanged>
+								</Scripts>
+								<ThumbTexture name="MageFeverSSConfigSlider1Thumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
+									<Size x="32" y="32" />
+								</ThumbTexture>
+							</Slider>
+						</Frames>
+					</Frame>
+				</Frames>
+			</Frame>
+			<Button name="$parentTab1" inherits="CharacterFrameTabButtonTemplate" id="1" text="General Procs">
+				<Anchors>
+					<Anchor point="CENTER" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="60" y="-10"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						PanelTemplates_SetTab(MageFeverOptions_Frame, 1);
+						myTabPage1:Show();
+						myTabPage2:Hide();
+						myTabPage3:Hide();
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentTab2" inherits="CharacterFrameTabButtonTemplate" id="2" text="Special Procs">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parentTab1" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="-16" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						PanelTemplates_SetTab(MageFeverOptions_Frame, 2);
+						myTabPage1:Hide();
+						myTabPage3:Hide();
+						myTabPage2:Show();
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentTab3" inherits="CharacterFrameTabButtonTemplate" id="3" text="Spellsteal">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parentTab2" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="-16" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						PanelTemplates_SetTab(MageFeverOptions_Frame, 3);
+						myTabPage1:Hide();
+						myTabPage2:Hide();
+						myTabPage3:Show();
+					</OnClick>
+				</Scripts>
+			</Button>
+			<CheckButton name="MageFeverOptionsClassic" parent="MageFeverOptions_Frame" enableMouse="true">
+				<Size x="32" y="32" />
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="150" y="-10" />
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="$parentText" text="Classic" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="LEFT">
+									<Offset x="32" y="0" />
+								</Anchor>
+							</Anchors>
+							<FontHeight val="10" />
+							<Color r="1" g="0.8196079" b="0" a="1" />
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnClick>MageFever_Classic(self);</OnClick>
+					<OnShow>self:SetChecked(MageFever3_Options.ClassicFrames)</OnShow>
+				</Scripts>
+				<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+				<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+				<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+				<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+				<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+			</CheckButton>
+			<CheckButton name="MageFeverOptionsLock" parent="MageFeverOptions_Frame" enableMouse="true">
+				<Size x="32" y="32" />
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="220" y="-10" />
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="$parentText" text="Lock" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="LEFT">
+									<Offset x="32" y="0" />
+								</Anchor>
+							</Anchors>
+							<FontHeight val="10" />
+							<Color r="1" g="0.8196079" b="0" a="1" />
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnClick>MageFever_Lock(self);</OnClick>
+					<OnShow>self:SetChecked(MageFever3_Options.Lock)</OnShow>
+				</Scripts>
+				<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+				<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+				<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+				<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+				<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+			</CheckButton>
+			<CheckButton name="MageFeverOptionsShow" parent="MageFeverOptions_Frame" enableMouse="true">
+				<Size x="32" y="32" />
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="275" y="-10" />
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="$parentText" text="Show" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="LEFT">
+									<Offset x="32" y="0" />
+								</Anchor>
+							</Anchors>
+							<FontHeight val="10" />
+							<Color r="1" g="0.8196079" b="0" a="1" />
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnClick>MageFever_Toggle(self);</OnClick>
+					<OnShow>self:SetChecked(MageFever3_Options.Showing)</OnShow>
+				</Scripts>
+				<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+				<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+				<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+				<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+				<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+			</CheckButton>
+			<Button name="$parentButton1" parent="MageFeverOptions_Frame" text="OK">
+				<Size x="65" y="22" />
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="355" y="-15" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>MageFeverOptions_Toggle();</OnClick>
+				</Scripts>
+				<NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
+					<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+				</NormalTexture>
+				<PushedTexture file="Interface\Buttons\UI-Panel-Button-Down">
+					<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+				</PushedTexture>
+				<HighlightTexture file="Interface\Buttons\UI-Panel-Button-Highlight" alphaMode="ADD">
+					<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+				</HighlightTexture>
+				<DisabledTexture file="Interface\Buttons\UI-Panel-Button-Disabled">
+					<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+				</DisabledTexture>
+				<ButtonText name="$parentText" text="OK">
+					<FontHeight val="10" />
+				</ButtonText>
+				<NormalFont style="GameFontNormal" />
+				<HighlightFont style="GameFontHighlight" />
+				<DisabledFont style="GameFontDisable" />
+				<PushedTextOffset x="0" y="0" />
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				MageFever_OnLoadOptions(self);
+				this.elapsed = 0;
+				PanelTemplates_SetNumTabs(MageFeverOptions_Frame, 3);
+				PanelTemplates_SetTab(MageFeverOptions_Frame, 1);
+			</OnLoad>
+			<OnEvent>MageFever_OnEvent(self, event, ...);</OnEvent>
+			<OnHide>
+				if ( self.isMoving ) then
+				self:StopMovingOrSizing();
+				self.isMoving = false;
+				end
+				PlaySound("UChatScrollButton");
+			</OnHide>
+			<OnShow>
+				PlaySound("UChatScrollButton");
+				PanelTemplates_SetTab(MageFeverOptions_Frame, 1);
+				myTabPage1:Show()
+				myTabPage2:Hide()
+				myTabPage3:Hide()
+			</OnShow>
+			<OnMouseDown>
+				self:StartMoving();
+				self.isMoving = true;
+			</OnMouseDown>
+			<OnMouseUp>
+				if ( self.isMoving ) then
+				self:StopMovingOrSizing();
+				self.isMoving = false;
+				end
+			</OnMouseUp>
+		</Scripts>
+	</Frame>
+
+	<Frame name="MageFeverFMTargetFrame" toplevel="true" frameStrata="HIGH" enableMouse="true" clampedToScreen="true" movable="true" parent="UIParent">
+		<Size x="260" y="65" />
+		<Anchors>
+			<Anchor point="CENTER">
+				<Offset x="260" y="-80" />
+			</Anchor>
+		</Anchors>
+		<Backdrop
+				bgFile="Interface\ChatFrame\ChatFrameBackground"
+				edgeFile="Interface\DialogFrame\UI-DialogBox-Border"
+				tile="false">
+			<BackgroundInsets>
+				<AbsInset left="4" right="4" top="4" bottom="4"/>
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32"/>
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32"/>
+			</EdgeSize>
+			<Color r="0" g="0" b="0" a="1" />
+		</Backdrop>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString name="MageFeverFMTargetText" text=" " font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+					<Anchors>
+						<Anchor point="CENTER">
+							<Offset x="0" y="18" />
+						</Anchor>
+					</Anchors>
+					<FontHeight val="10" />
+					<Color r="1" g="0.8196079" b="0" a="1" />
+				</FontString>
+        <FontString name="MageFeverFMTargetText" text="as your FM target" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal">
+          <Anchors>
+            <Anchor point="CENTER">
+              <Offset x="0" y="5" />
+            </Anchor>
+          </Anchors>
+          <FontHeight val="10" />
+          <Color r="1" g="0.8196079" b="0" a="1" />
+        </FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button name="$parentYes" parent="MageFeverFMTargetFrame" text="Accept">
+				<Size x="60" y="20" />
+				<Anchors>
+					<Anchor point="CENTER">
+						<Offset x="-40" y="-10" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>MageFeverAcceptFM();</OnClick>
+				</Scripts>
+				<NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
+					<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+				</NormalTexture>
+				<PushedTexture file="Interface\Buttons\UI-Panel-Button-Down">
+					<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+				</PushedTexture>
+				<HighlightTexture file="Interface\Buttons\UI-Panel-Button-Highlight" alphaMode="ADD">
+					<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+				</HighlightTexture>
+				<DisabledTexture file="Interface\Buttons\UI-Panel-Button-Disabled">
+					<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+				</DisabledTexture>
+				<ButtonText name="$parentText" text="OK">
+					<FontHeight val="10" />
+				</ButtonText>
+				<NormalFont style="GameFontNormal" />
+				<HighlightFont style="GameFontHighlight" />
+				<DisabledFont style="GameFontDisable" />
+				<PushedTextOffset x="0" y="0" />
+			</Button>
+			<Button name="$parentNo" parent="MageFeverFMTargetFrame" text="Deny">
+				<Size x="60" y="20" />
+				<Anchors>
+					<Anchor point="CENTER">
+						<Offset x="40" y="-10" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>MageFeverDenyFM();</OnClick>
+				</Scripts>
+				<NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
+					<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+				</NormalTexture>
+				<PushedTexture file="Interface\Buttons\UI-Panel-Button-Down">
+					<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+				</PushedTexture>
+				<HighlightTexture file="Interface\Buttons\UI-Panel-Button-Highlight" alphaMode="ADD">
+					<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+				</HighlightTexture>
+				<DisabledTexture file="Interface\Buttons\UI-Panel-Button-Disabled">
+					<TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+				</DisabledTexture>
+				<ButtonText name="$parentText" text="OK">
+					<FontHeight val="10" />
+				</ButtonText>
+				<NormalFont style="GameFontNormal" />
+				<HighlightFont style="GameFontHighlight" />
+				<DisabledFont style="GameFontDisable" />
+				<PushedTextOffset x="0" y="0" />
+			</Button>
+		</Frames>
+	</Frame >
+</Ui>
+
+
+

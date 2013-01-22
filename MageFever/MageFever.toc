@@ -1,0 +1,9 @@
+## Interface: 30300
+## Version: 3.3.5## Title: Mage Fever
+## Author: Kritologist
+## Notes: Dynamic tracking of buffs, debuffs, and procs specific to a Mage
+## SavedVariablesPerCharacter: MageFever3_Options, MageFeverProcNames, MFTTWSpells, MageFeverMI_Options, MageFeverTTW_Options
+
+MageFever.xml
+
+
