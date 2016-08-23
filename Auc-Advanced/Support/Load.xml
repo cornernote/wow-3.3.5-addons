@@ -1,6 +1,0 @@
-<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
-	<Script file="LibRevision.lua"/>
-	<Script file="LibGroupStore.lua"/>
-	<Script file="LibTickTock.lua"/>
-</Ui>
-
